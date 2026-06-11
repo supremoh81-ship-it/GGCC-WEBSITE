@@ -2,7 +2,9 @@ import type { Metadata } from 'next'
 import { HeroSection } from '@/components/home/HeroSection'
 import { PastorWelcome } from '@/components/home/PastorWelcome'
 import { VisionMission } from '@/components/home/VisionMission'
+import { LiveExperience } from '@/components/home/LiveExperience'
 import { FeaturedSermon } from '@/components/home/FeaturedSermon'
+import { LatestPodcast } from '@/components/home/LatestPodcast'
 import { PrayerCTA } from '@/components/home/PrayerCTA'
 import { UpcomingEvents } from '@/components/home/UpcomingEvents'
 import { MinistriesGrid } from '@/components/home/MinistriesGrid'
@@ -24,7 +26,9 @@ export default function HomePage() {
       <HeroSection />
       <PastorWelcome />
       <VisionMission />
+      <LiveExperience />
       <FeaturedSermon />
+      <LatestPodcast />
       <PrayerCTA />
       <UpcomingEvents />
       <MinistriesGrid />
