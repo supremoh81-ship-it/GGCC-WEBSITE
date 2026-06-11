@@ -1,0 +1,887 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ─────────────────────────────────────────────
+// ENUMS
+// ─────────────────────────────────────────────
+
+enum Role {
+  MEMBER
+  VOLUNTEER
+  MINISTER
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+  AUDIO
+  DOCUMENT
+}
+
+enum PrayerVisibility {
+  PUBLIC
+  PRIVATE
+  ANONYMOUS
+}
+
+enum PrayerStatus {
+  PENDING
+  ACTIVE
+  ANSWERED
+  ARCHIVED
+}
+
+enum EventStatus {
+  DRAFT
+  PUBLISHED
+  CANCELLED
+  COMPLETED
+}
+
+enum EventType {
+  IN_PERSON
+  ONLINE
+  HYBRID
+}
+
+enum DonationStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum DonationFrequency {
+  ONE_TIME
+  WEEKLY
+  MONTHLY
+  ANNUALLY
+}
+
+enum TestimonyStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum SermonType {
+  VIDEO
+  AUDIO
+  NOTES_ONLY
+}
+
+enum PublishStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+// ─────────────────────────────────────────────
+// USERS & AUTH
+// ─────────────────────────────────────────────
+
+model User {
+  id               String    @id @default(cuid())
+  email            String    @unique
+  emailVerified    DateTime?
+  passwordHash     String?
+  firstName        String
+  lastName         String
+  displayName      String?
+  avatarUrl        String?
+  phone            String?
+  bio              String?
+  role             Role      @default(MEMBER)
+  isActive         Boolean   @default(true)
+  country          String?
+  city             String?
+  timezone         String?
+  stripeCustomerId String?   @unique
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  accounts           Account[]
+  sessions           Session[]
+  prayers            PrayerRequest[]
+  intercessions      PrayerIntercession[]
+  testimonies        Testimony[]
+  eventRegistrations EventRegistration[]
+  ministryMembers    MinistryMember[]
+  donations          Donation[]
+  subscriptions      GivingSubscription[]
+  comments           SermonComment[]
+  podcastProgress    PodcastProgress[]
+  sermonBookmarks    SermonBookmark[]
+  notifications      Notification[]
+
+  @@index([email])
+  @@index([role])
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  email     String
+  token     String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+}
+
+// ─────────────────────────────────────────────
+// SERMONS
+// ─────────────────────────────────────────────
+
+model Sermon {
+  id            String        @id @default(cuid())
+  slug          String        @unique
+  title         String
+  description   String?
+  scriptureRef  String?
+  type          SermonType    @default(VIDEO)
+  status        PublishStatus @default(DRAFT)
+  videoUrl      String?
+  audioUrl      String?
+  thumbnailUrl  String?
+  duration      Int?
+  viewCount     Int           @default(0)
+  downloadCount Int           @default(0)
+  notes         String?
+  transcript    String?
+  isFeatured    Boolean       @default(false)
+  publishedAt   DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  speakerId String?
+  speaker   Speaker?      @relation(fields: [speakerId], references: [id])
+
+  seriesId String?
+  series   SermonSeries? @relation(fields: [seriesId], references: [id])
+
+  categories SermonCategoryMap[]
+  playlists  PlaylistSermon[]
+  comments   SermonComment[]
+  bookmarks  SermonBookmark[]
+  tags       SermonTag[]
+  plays      SermonPlay[]
+
+  @@index([slug])
+  @@index([status])
+  @@index([publishedAt])
+  @@index([isFeatured])
+}
+
+model Speaker {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  name      String
+  title     String?
+  bio       String?
+  avatarUrl String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sermons Sermon[]
+
+  @@index([slug])
+}
+
+model SermonSeries {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  title       String
+  description String?
+  artworkUrl  String?
+  startDate   DateTime?
+  endDate     DateTime?
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  sermons Sermon[]
+
+  @@index([slug])
+}
+
+model SermonCategory {
+  id      String              @id @default(cuid())
+  name    String              @unique
+  slug    String              @unique
+  sermons SermonCategoryMap[]
+
+  @@index([slug])
+}
+
+model SermonCategoryMap {
+  sermonId   String
+  categoryId String
+
+  sermon   Sermon         @relation(fields: [sermonId], references: [id], onDelete: Cascade)
+  category SermonCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([sermonId, categoryId])
+}
+
+model SermonTag {
+  id       String @id @default(cuid())
+  sermonId String
+  name     String
+
+  sermon Sermon @relation(fields: [sermonId], references: [id], onDelete: Cascade)
+
+  @@index([sermonId])
+}
+
+model Playlist {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  isPublic    Boolean  @default(true)
+  coverUrl    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  sermons PlaylistSermon[]
+}
+
+model PlaylistSermon {
+  playlistId String
+  sermonId   String
+  position   Int
+
+  playlist Playlist @relation(fields: [playlistId], references: [id], onDelete: Cascade)
+  sermon   Sermon   @relation(fields: [sermonId], references: [id], onDelete: Cascade)
+
+  @@id([playlistId, sermonId])
+  @@index([position])
+}
+
+model SermonComment {
+  id         String   @id @default(cuid())
+  content    String
+  userId     String
+  sermonId   String
+  parentId   String?
+  isApproved Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  user    User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sermon  Sermon         @relation(fields: [sermonId], references: [id], onDelete: Cascade)
+  parent  SermonComment?  @relation("CommentReplies", fields: [parentId], references: [id])
+  replies SermonComment[] @relation("CommentReplies")
+
+  @@index([sermonId])
+}
+
+model SermonBookmark {
+  userId    String
+  sermonId  String
+  createdAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sermon Sermon @relation(fields: [sermonId], references: [id], onDelete: Cascade)
+
+  @@id([userId, sermonId])
+}
+
+model SermonPlay {
+  id        String   @id @default(cuid())
+  sermonId  String
+  userId    String?
+  duration  Int?
+  createdAt DateTime @default(now())
+
+  sermon Sermon @relation(fields: [sermonId], references: [id], onDelete: Cascade)
+
+  @@index([sermonId])
+}
+
+// ─────────────────────────────────────────────
+// PODCASTS
+// ─────────────────────────────────────────────
+
+model PodcastShow {
+  id               String   @id @default(cuid())
+  slug             String   @unique
+  title            String
+  description      String?
+  artworkUrl       String?
+  rssFeedUrl       String?
+  spotifyUrl       String?
+  applePodcastUrl  String?
+  googlePodcastUrl String?
+  isActive         Boolean  @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  episodes   PodcastEpisode[]
+  categories PodcastShowCategory[]
+
+  @@index([slug])
+}
+
+model PodcastEpisode {
+  id           String        @id @default(cuid())
+  slug         String        @unique
+  showId       String
+  title        String
+  description  String?
+  audioUrl     String
+  duration     Int?
+  transcript   String?
+  thumbnailUrl String?
+  episodeNo    Int?
+  seasonNo     Int?
+  status       PublishStatus @default(DRAFT)
+  publishedAt  DateTime?
+  playCount    Int           @default(0)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  show     PodcastShow       @relation(fields: [showId], references: [id], onDelete: Cascade)
+  progress PodcastProgress[]
+  tags     PodcastEpisodeTag[]
+
+  @@index([slug])
+  @@index([showId])
+  @@index([publishedAt])
+}
+
+model PodcastCategory {
+  id    String                @id @default(cuid())
+  name  String                @unique
+  shows PodcastShowCategory[]
+}
+
+model PodcastShowCategory {
+  showId     String
+  categoryId String
+
+  show     PodcastShow     @relation(fields: [showId], references: [id], onDelete: Cascade)
+  category PodcastCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([showId, categoryId])
+}
+
+model PodcastEpisodeTag {
+  id        String         @id @default(cuid())
+  episodeId String
+  name      String
+
+  episode PodcastEpisode @relation(fields: [episodeId], references: [id], onDelete: Cascade)
+
+  @@index([episodeId])
+}
+
+model PodcastProgress {
+  userId    String
+  episodeId String
+  position  Int      @default(0)
+  completed Boolean  @default(false)
+  updatedAt DateTime @updatedAt
+
+  user    User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  episode PodcastEpisode @relation(fields: [episodeId], references: [id], onDelete: Cascade)
+
+  @@id([userId, episodeId])
+}
+
+// ─────────────────────────────────────────────
+// PRAYER
+// ─────────────────────────────────────────────
+
+model PrayerCategory {
+  id      String          @id @default(cuid())
+  name    String          @unique
+  icon    String?
+  prayers PrayerRequest[]
+}
+
+model PrayerRequest {
+  id             String           @id @default(cuid())
+  userId         String?
+  name           String
+  email          String?
+  title          String
+  body           String
+  visibility     PrayerVisibility @default(PUBLIC)
+  status         PrayerStatus     @default(ACTIVE)
+  categoryId     String?
+  isUrgent       Boolean          @default(false)
+  intercedeCount Int              @default(0)
+  isAnswered     Boolean          @default(false)
+  answeredNote   String?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  user          User?               @relation(fields: [userId], references: [id], onDelete: SetNull)
+  category      PrayerCategory?     @relation(fields: [categoryId], references: [id])
+  intercessions PrayerIntercession[]
+
+  @@index([status])
+  @@index([visibility])
+  @@index([createdAt])
+}
+
+model PrayerIntercession {
+  id        String   @id @default(cuid())
+  prayerId  String
+  userId    String
+  note      String?
+  createdAt DateTime @default(now())
+
+  prayer PrayerRequest @relation(fields: [prayerId], references: [id], onDelete: Cascade)
+  user   User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([prayerId, userId])
+}
+
+model PrayerSession {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  hostName    String
+  meetingUrl  String?
+  platform    String?
+  scheduledAt DateTime
+  durationMin Int?
+  isRecurring Boolean  @default(false)
+  recurrence  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([scheduledAt])
+}
+
+// ─────────────────────────────────────────────
+// EVENTS
+// ─────────────────────────────────────────────
+
+model EventCategory {
+  id     String  @id @default(cuid())
+  name   String  @unique
+  slug   String  @unique
+  events Event[]
+
+  @@index([slug])
+}
+
+model Event {
+  id                   String      @id @default(cuid())
+  slug                 String      @unique
+  title                String
+  description          String?
+  bannerUrl            String?
+  thumbnailUrl         String?
+  type                 EventType   @default(IN_PERSON)
+  status               EventStatus @default(DRAFT)
+  categoryId           String?
+  location             String?
+  address              String?
+  onlineUrl            String?
+  startDate            DateTime
+  endDate              DateTime?
+  registrationDeadline DateTime?
+  capacity             Int?
+  requiresTicket       Boolean     @default(false)
+  ticketPrice          Decimal?    @db.Decimal(10, 2)
+  currency             String      @default("USD")
+  isRecurring          Boolean     @default(false)
+  recurrenceRule       String?
+  isFeatured           Boolean     @default(false)
+  organizerName        String?
+  organizerEmail       String?
+  tags                 String[]
+  createdAt            DateTime    @default(now())
+  updatedAt            DateTime    @updatedAt
+
+  category      EventCategory?      @relation(fields: [categoryId], references: [id])
+  registrations EventRegistration[]
+
+  @@index([slug])
+  @@index([startDate])
+  @@index([status])
+}
+
+model EventRegistration {
+  id              String   @id @default(cuid())
+  eventId         String
+  userId          String?
+  firstName       String
+  lastName        String
+  email           String
+  phone           String?
+  ticketCount     Int      @default(1)
+  totalPaid       Decimal? @db.Decimal(10, 2)
+  currency        String   @default("USD")
+  paymentStatus   String?
+  stripePaymentId String?
+  notes           String?
+  checkedIn       Boolean  @default(false)
+  checkedInAt     DateTime?
+  createdAt       DateTime @default(now())
+
+  event Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  User?  @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([eventId])
+  @@index([email])
+}
+
+// ─────────────────────────────────────────────
+// MINISTRIES
+// ─────────────────────────────────────────────
+
+model Ministry {
+  id              String   @id @default(cuid())
+  slug            String   @unique
+  name            String
+  tagline         String?
+  description     String?
+  bannerUrl       String?
+  iconUrl         String?
+  color           String?
+  email           String?
+  meetingSchedule String?
+  location        String?
+  isActive        Boolean  @default(true)
+  sortOrder       Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  leaders MinistryLeader[]
+  members MinistryMember[]
+
+  @@index([slug])
+}
+
+model MinistryLeader {
+  id         String   @id @default(cuid())
+  ministryId String
+  name       String
+  title      String
+  bio        String?
+  avatarUrl  String?
+  email      String?
+  sortOrder  Int      @default(0)
+
+  ministry Ministry @relation(fields: [ministryId], references: [id], onDelete: Cascade)
+
+  @@index([ministryId])
+}
+
+model MinistryMember {
+  userId     String
+  ministryId String
+  role       String?
+  joinedAt   DateTime @default(now())
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ministry Ministry @relation(fields: [ministryId], references: [id], onDelete: Cascade)
+
+  @@id([userId, ministryId])
+}
+
+// ─────────────────────────────────────────────
+// GIVING / DONATIONS
+// ─────────────────────────────────────────────
+
+model GivingCampaign {
+  id           String    @id @default(cuid())
+  slug         String    @unique
+  title        String
+  description  String?
+  imageUrl     String?
+  goalAmount   Decimal   @db.Decimal(12, 2)
+  raisedAmount Decimal   @default(0) @db.Decimal(12, 2)
+  currency     String    @default("USD")
+  startDate    DateTime
+  endDate      DateTime?
+  isActive     Boolean   @default(true)
+  isFeatured   Boolean   @default(false)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  donations Donation[]
+
+  @@index([slug])
+}
+
+model Donation {
+  id              String            @id @default(cuid())
+  userId          String?
+  campaignId      String?
+  firstName       String
+  lastName        String
+  email           String
+  amount          Decimal           @db.Decimal(12, 2)
+  currency        String            @default("USD")
+  frequency       DonationFrequency @default(ONE_TIME)
+  status          DonationStatus    @default(PENDING)
+  stripePaymentId String?           @unique
+  stripeChargeId  String?
+  isAnonymous     Boolean           @default(false)
+  coverFees       Boolean           @default(false)
+  note            String?
+  receiptSent     Boolean           @default(false)
+  createdAt       DateTime          @default(now())
+
+  user     User?           @relation(fields: [userId], references: [id], onDelete: SetNull)
+  campaign GivingCampaign? @relation(fields: [campaignId], references: [id])
+
+  @@index([email])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model GivingSubscription {
+  id                   String            @id @default(cuid())
+  userId               String
+  stripeSubscriptionId String            @unique
+  amount               Decimal           @db.Decimal(12, 2)
+  currency             String            @default("USD")
+  frequency            DonationFrequency
+  status               String
+  currentPeriodEnd     DateTime?
+  cancelledAt          DateTime?
+  createdAt            DateTime          @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+// ─────────────────────────────────────────────
+// TESTIMONIES
+// ─────────────────────────────────────────────
+
+model TestimonyCategory {
+  id          String      @id @default(cuid())
+  name        String      @unique
+  testimonies Testimony[]
+}
+
+model Testimony {
+  id         String          @id @default(cuid())
+  userId     String?
+  name       String
+  title      String
+  body       String
+  videoUrl   String?
+  imageUrl   String?
+  categoryId String?
+  status     TestimonyStatus @default(PENDING)
+  isFeatured Boolean         @default(false)
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+
+  user     User?              @relation(fields: [userId], references: [id], onDelete: SetNull)
+  category TestimonyCategory? @relation(fields: [categoryId], references: [id])
+
+  @@index([status])
+}
+
+// ─────────────────────────────────────────────
+// MEDIA LIBRARY
+// ─────────────────────────────────────────────
+
+model Media {
+  id         String    @id @default(cuid())
+  publicId   String    @unique
+  url        String
+  secureUrl  String
+  type       MediaType
+  format     String?
+  width      Int?
+  height     Int?
+  bytes      Int?
+  duration   Float?
+  alt        String?
+  caption    String?
+  folder     String?
+  uploadedBy String?
+  createdAt  DateTime  @default(now())
+
+  @@index([type])
+  @@index([folder])
+}
+
+// ─────────────────────────────────────────────
+// GALLERY
+// ─────────────────────────────────────────────
+
+model GalleryAlbum {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  title       String
+  description String?
+  coverUrl    String?
+  date        DateTime?
+  isPublic    Boolean   @default(true)
+  sortOrder   Int       @default(0)
+  createdAt   DateTime  @default(now())
+
+  photos GalleryPhoto[]
+
+  @@index([slug])
+}
+
+model GalleryPhoto {
+  id           String   @id @default(cuid())
+  albumId      String
+  url          String
+  thumbnailUrl String?
+  caption      String?
+  sortOrder    Int      @default(0)
+  createdAt    DateTime @default(now())
+
+  album GalleryAlbum @relation(fields: [albumId], references: [id], onDelete: Cascade)
+
+  @@index([albumId])
+}
+
+// ─────────────────────────────────────────────
+// SITE CONTENT
+// ─────────────────────────────────────────────
+
+model SiteSettings {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  label     String?
+  updatedAt DateTime @updatedAt
+}
+
+model Page {
+  id        String        @id @default(cuid())
+  slug      String        @unique
+  title     String
+  metaTitle String?
+  metaDesc  String?
+  status    PublishStatus @default(DRAFT)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  blocks ContentBlock[]
+
+  @@index([slug])
+}
+
+model ContentBlock {
+  id        String @id @default(cuid())
+  pageId    String
+  blockType String
+  content   String
+  sortOrder Int    @default(0)
+
+  page Page @relation(fields: [pageId], references: [id], onDelete: Cascade)
+
+  @@index([pageId])
+}
+
+// ─────────────────────────────────────────────
+// NOTIFICATIONS
+// ─────────────────────────────────────────────
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String
+  title     String
+  body      String?
+  data      String?
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead])
+}
+
+// ─────────────────────────────────────────────
+// CONTACT / NEWSLETTER
+// ─────────────────────────────────────────────
+
+model ContactSubmission {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String?
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([isRead])
+}
+
+model NewsletterSubscriber {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  firstName    String?
+  isActive     Boolean  @default(true)
+  source       String?
+  subscribedAt DateTime @default(now())
+
+  @@index([email])
+}
+
+// ─────────────────────────────────────────────
+// ANALYTICS
+// ─────────────────────────────────────────────
+
+model PageView {
+  id        String   @id @default(cuid())
+  path      String
+  referrer  String?
+  country   String?
+  device    String?
+  createdAt DateTime @default(now())
+
+  @@index([path])
+  @@index([createdAt])
+}

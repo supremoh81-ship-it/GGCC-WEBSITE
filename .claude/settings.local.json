@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(node --version)",
+      "PowerShell(npm --version)",
+      "PowerShell($env:PATH; Write-Host \"---\"; Get-Command node -ErrorAction SilentlyContinue; Get-ChildItem \"C:\\\\Program Files\\\\nodejs\" -ErrorAction SilentlyContinue | Select-Object -First 5; Get-ChildItem \"$env:APPDATA\\\\npm\" -ErrorAction SilentlyContinue | Select-Object -First 5; Get-ChildItem \"C:\\\\Users\\\\USER\\\\AppData\\\\Roaming\\\\nvm\" -ErrorAction SilentlyContinue | Select-Object -First 5)",
+      "PowerShell(Get-ChildItem \"C:\\\\Program Files\\\\nodejs\" -ErrorAction SilentlyContinue; Get-ChildItem \"C:\\\\Program Files \\(x86\\)\\\\nodejs\" -ErrorAction SilentlyContinue; Get-ChildItem \"$env:LOCALAPPDATA\\\\Programs\\\\nodejs\" -ErrorAction SilentlyContinue; Test-Path \"C:\\\\Users\\\\USER\\\\AppData\\\\Roaming\\\\nvm\\\\nvm.exe\")",
+      "PowerShell(winget --version 2>$null)",
+      "PowerShell(scoop --version 2>$null)",
+      "PowerShell(choco --version 2>$null)",
+      "PowerShell(if \\(-not $?\\) { \"winget not found\" })",
+      "PowerShell(if \\(-not $?\\) { \"scoop not found\" })",
+      "PowerShell(if \\(-not $?\\) { \"choco not found\" })",
+      "PowerShell($nodeDir = \"C:\\\\Users\\\\USER\\\\AppData\\\\Local\\\\node-portable\"; New-Item -ItemType Directory -Force -Path $nodeDir | Out-Null; $url = \"https://nodejs.org/dist/v20.14.0/node-v20.14.0-win-x64.zip\"; $zipPath = \"$nodeDir\\\\node.zip\"; Write-Host \"Downloading Node.js v20.14.0 portable...\"; Invoke-WebRequest -Uri $url -OutFile $zipPath -UseBasicParsing; Write-Host \"Download complete. File size: $\\(\\(Get-Item $zipPath\\).Length / 1MB\\) MB\")",
+      "PowerShell(Test-Path \"C:\\\\Program Files\\\\nodejs\\\\node.exe\"; Test-Path \"C:\\\\Program Files \\(x86\\)\\\\nodejs\\\\node.exe\"; Test-Path \"$env:LOCALAPPDATA\\\\node-portable\")",
+      "PowerShell(Get-Command node -ErrorAction SilentlyContinue)",
+      "PowerShell(Get-Command npm -ErrorAction SilentlyContinue)",
+      "PowerShell(Get-Command npx -ErrorAction SilentlyContinue)",
+      "PowerShell(Test-Path \"C:\\\\Users\\\\USER\\\\AppData\\\\Local\\\\node-portable\\\\node.zip\"; if \\(Test-Path \"C:\\\\Users\\\\USER\\\\AppData\\\\Local\\\\node-portable\\\\node.zip\"\\) { \\(Get-Item \"C:\\\\Users\\\\USER\\\\AppData\\\\Local\\\\node-portable\\\\node.zip\"\\).Length })",
+      "PowerShell($env:PATH -split ';' | Where-Object { $_ -ne '' } | Sort-Object)",
+      "PowerShell(Get-Command node -ErrorAction SilentlyContinue; Get-Command npm -ErrorAction SilentlyContinue; $env:PATH -split ';' | Where-Object { $_ -match 'node' })",
+      "PowerShell(Get-ChildItem \"C:\\\\Program Files\\\\nodejs\" -ErrorAction SilentlyContinue; Get-ChildItem \"C:\\\\Program Files \\(x86\\)\\\\nodejs\" -ErrorAction SilentlyContinue; Test-Path \"$env:APPDATA\\\\npm\\\\npm.cmd\"; Test-Path \"C:\\\\Users\\\\USER\\\\AppData\\\\Roaming\\\\nvm\")"
+    ]
+  }
+}
