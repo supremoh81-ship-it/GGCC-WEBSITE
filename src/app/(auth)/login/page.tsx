@@ -1,5 +1,6 @@
 'use client'
 
+import { Suspense } from 'react'
 import { signIn } from 'next-auth/react'
 import { useState } from 'react'
 import Link from 'next/link'
@@ -20,7 +21,7 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>
 
-export default function LoginPage() {
+function LoginForm() {
   const searchParams = useSearchParams()
   const callbackUrl = searchParams.get('callbackUrl') ?? '/member/dashboard'
   const [googleLoading, setGoogleLoading] = useState(false)
@@ -118,5 +119,13 @@ export default function LoginPage() {
         </Link>
       </p>
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginForm />
+    </Suspense>
   )
 }
