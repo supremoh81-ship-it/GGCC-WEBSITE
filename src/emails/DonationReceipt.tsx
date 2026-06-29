@@ -104,7 +104,7 @@ export default function DonationReceipt({
 
             <Section style={{ textAlign: 'center', marginTop: '32px' }}>
               <Button
-                href={`${process.env.NEXT_PUBLIC_APP_URL}/member/my-giving`}
+                href={`${process.env.NEXT_PUBLIC_APP_URL || 'https://ggcc.church'}/member/my-giving`}
                 style={button}
               >
                 View Giving History

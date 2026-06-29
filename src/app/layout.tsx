@@ -19,7 +19,10 @@ const playfair = Playfair_Display({
   display: 'swap',
 })
 
+const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://ggcc.church'
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
     template: '%s | GGCC Church',
     default: 'GGCC | Greater Grace Christian Center',
@@ -41,7 +44,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: process.env.NEXT_PUBLIC_APP_URL,
+    url: siteUrl,
     siteName: 'GGCC',
     title: 'GGCC | Greater Grace Christian Center',
     description:

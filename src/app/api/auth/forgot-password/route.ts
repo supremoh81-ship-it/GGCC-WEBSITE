@@ -23,7 +23,7 @@ export async function POST(req: Request) {
         data: { email, token, expiresAt },
       })
 
-      const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${token}`
+      const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://ggcc.church'}/reset-password?token=${token}`
 
       await resend.emails.send({
         from: process.env.RESEND_FROM_EMAIL ?? 'noreply@ggcc.church',

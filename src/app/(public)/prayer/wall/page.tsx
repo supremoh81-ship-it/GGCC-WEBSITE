@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   description: 'Stand in agreement with the GGCC community. Add your prayer, intercede for others.',
 }
 
-export const revalidate = 30
+export const dynamic = 'force-dynamic'
 
 export default async function PrayerWallPage() {
   const prayers = await prisma.prayerRequest.findMany({

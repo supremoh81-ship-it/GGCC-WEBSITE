@@ -92,7 +92,7 @@ export function EventConfirmation({
 
             <Section style={{ textAlign: 'center' }}>
               <Link
-                href={`${process.env.NEXT_PUBLIC_APP_URL}/events`}
+                href={`${process.env.NEXT_PUBLIC_APP_URL || 'https://ggcc.church'}/events`}
                 style={{ display: 'inline-block', backgroundColor: '#C9A84C', color: '#0A1628', fontWeight: 700, fontSize: 14, borderRadius: 10, padding: '14px 32px', textDecoration: 'none' }}
               >
                 View Event Details

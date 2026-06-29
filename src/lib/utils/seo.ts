@@ -9,7 +9,8 @@ interface SeoProps {
 }
 
 export function buildMetadata({ title, description, image, noIndex, path }: SeoProps): Metadata {
-  const url = `${process.env.NEXT_PUBLIC_APP_URL}${path ?? ''}`
+  const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://ggcc.church'
+  const url = `${siteUrl}${path ?? ''}`
   const ogImage = image ?? '/images/og-image.jpg'
 
   return {
