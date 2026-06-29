@@ -125,7 +125,7 @@ export default function EventsPage() {
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/80 to-transparent" />
                       <div className="absolute top-3 left-3 flex gap-2">
-                        <Badge variant={event.type === 'ONLINE' ? 'blue' : event.type === 'HYBRID' ? 'white' : 'gold'}>
+                        <Badge variant={event.type === 'ONLINE' ? 'teal' : event.type === 'HYBRID' ? 'magenta' : 'gold'}>
                           {event.type.replace('_', ' ')}
                         </Badge>
                         <Badge variant="muted">{event.category}</Badge>

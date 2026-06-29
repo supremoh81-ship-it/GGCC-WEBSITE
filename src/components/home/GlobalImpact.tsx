@@ -4,6 +4,13 @@ import { GoldShimmer } from '@/components/motion/GoldShimmer'
 import { CountUp } from '@/components/motion/CountUp'
 import { Globe, MapPin, Heart, Wifi } from 'lucide-react'
 
+const accentClasses = [
+  { icon: 'text-brand-teal', chip: 'bg-brand-teal/10', value: 'text-brand-teal-light' },
+  { icon: 'text-brand-gold', chip: 'bg-brand-gold/10', value: 'text-brand-gold' },
+  { icon: 'text-brand-magenta-light', chip: 'bg-brand-magenta/10', value: 'text-brand-magenta-light' },
+  { icon: 'text-brand-teal-light', chip: 'bg-brand-teal/10', value: 'text-brand-teal-light' },
+]
+
 const regions = [
   { region: 'Africa', countries: 38, flag: '🌍' },
   { region: 'Americas', countries: 22, flag: '🌎' },
@@ -24,6 +31,10 @@ export function GlobalImpact() {
   return (
     <section className="section-padding bg-brand-blue relative overflow-hidden">
       <div className="absolute inset-0 bg-pattern-grid opacity-30 pointer-events-none" />
+      <div
+        className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[260px] rounded-full pointer-events-none blur-3xl"
+        style={{ background: 'radial-gradient(ellipse at center, rgba(31,168,160,0.1) 0%, transparent 70%)' }}
+      />
 
       <div className="container mx-auto px-4 max-w-7xl relative">
         <FadeInUp className="text-center mb-14">
@@ -39,19 +50,22 @@ export function GlobalImpact() {
 
         {/* Impact stats */}
         <StaggerChildren className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-16">
-          {impactStats.map((stat) => (
-            <StaggerItem key={stat.label}>
-              <div className="glass-card rounded-2xl p-6 text-center">
-                <div className="w-12 h-12 rounded-xl bg-brand-gold/10 flex items-center justify-center mx-auto mb-4">
-                  <stat.icon className="h-6 w-6 text-brand-gold" />
+          {impactStats.map((stat, i) => {
+            const accent = accentClasses[i % accentClasses.length]
+            return (
+              <StaggerItem key={stat.label}>
+                <div className="glass-card rounded-2xl p-6 text-center">
+                  <div className={`w-12 h-12 rounded-xl ${accent.chip} flex items-center justify-center mx-auto mb-4`}>
+                    <stat.icon className={`h-6 w-6 ${accent.icon}`} />
+                  </div>
+                  <div className={`font-display font-bold text-2xl mb-1 ${accent.value}`}>
+                    <CountUp end={stat.value} suffix={stat.suffix} />
+                  </div>
+                  <div className="text-xs text-text-muted leading-snug">{stat.label}</div>
                 </div>
-                <div className="font-display font-bold text-2xl text-brand-gold mb-1">
-                  <CountUp end={stat.value} suffix={stat.suffix} />
-                </div>
-                <div className="text-xs text-text-muted leading-snug">{stat.label}</div>
-              </div>
-            </StaggerItem>
-          ))}
+              </StaggerItem>
+            )
+          })}
         </StaggerChildren>
 
         {/* Region breakdown */}

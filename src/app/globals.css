@@ -2,22 +2,28 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 /* ─────────────────────────────────────────────────────────────
-   CSS CUSTOM PROPERTIES — GGCC Cinematic Design System
+   CSS CUSTOM PROPERTIES — GGCC Royal Grace Design System
 ───────────────────────────────────────────────────────────── */
 
 :root {
   /* Colors */
-  --color-brand-navy: #0A1628;
-  --color-brand-blue: #0F2347;
-  --color-brand-blue-mid: #1A3A6B;
-  --color-brand-blue-light: #243F73;
+  --color-brand-navy: #100B16;
+  --color-brand-blue: #1C1422;
+  --color-brand-blue-mid: #2A1F33;
+  --color-brand-blue-light: #372A42;
   --color-brand-gold: #C9A84C;
   --color-brand-gold-light: #E8C97A;
   --color-brand-gold-dark: #8B6914;
   --color-brand-gold-pale: #F5E6B8;
+  --color-brand-teal: #1FA8A0;
+  --color-brand-teal-light: #5FD9CF;
+  --color-brand-teal-dark: #0E6862;
+  --color-brand-magenta: #C23A82;
+  --color-brand-magenta-light: #E37FB8;
+  --color-brand-magenta-dark: #7E1F58;
   --color-white: #FFFFFF;
   --color-soft-gray: #F2F4F8;
   --color-gray-100: #E8ECF4;
@@ -25,11 +31,12 @@
   --color-gray-400: #8A9BB8;
   --color-gray-600: #4A5A78;
   --color-text-primary: #FFFFFF;
-  --color-text-secondary: #A8B8D4;
-  --color-text-muted: #6A7B9A;
+  --color-text-secondary: #C7BDC8;
+  --color-text-muted: #8C8090;
 
   /* Typography */
   --font-display: 'Playfair Display', Georgia, serif;
+  --font-flourish: 'Cormorant Garamond', Georgia, serif;
   --font-body: 'Inter', system-ui, sans-serif;
 
   /* Spacing */
@@ -47,16 +54,20 @@
   --shadow-gold: 0 0 40px rgba(201, 168, 76, 0.2);
   --shadow-gold-sm: 0 0 20px rgba(201, 168, 76, 0.15);
   --shadow-gold-lg: 0 0 80px rgba(201, 168, 76, 0.25);
+  --shadow-teal: 0 0 40px rgba(31, 168, 160, 0.2);
+  --shadow-magenta: 0 0 40px rgba(194, 58, 130, 0.2);
   --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
   --shadow-card-hover: 0 8px 40px rgba(0, 0, 0, 0.5);
   --shadow-glow: 0 0 80px rgba(201, 168, 76, 0.1);
 
   /* Gradients */
-  --gradient-hero: linear-gradient(135deg, #0A1628 0%, #0F2347 50%, #1A3A6B 100%);
+  --gradient-hero: linear-gradient(135deg, #100B16 0%, #1C1422 50%, #2A1F33 100%);
   --gradient-gold: linear-gradient(135deg, #C9A84C 0%, #E8C97A 50%, #C9A84C 100%);
-  --gradient-overlay: linear-gradient(to top, rgba(10, 22, 40, 0.98) 0%, rgba(10, 22, 40, 0.4) 60%, transparent 100%);
+  --gradient-overlay: linear-gradient(to top, rgba(16, 11, 22, 0.98) 0%, rgba(16, 11, 22, 0.4) 60%, transparent 100%);
   --gradient-card: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
   --gradient-radial-gold: radial-gradient(ellipse at center, rgba(201, 168, 76, 0.15) 0%, transparent 70%);
+  --gradient-regal: linear-gradient(120deg, #1FA8A0 0%, #C9A84C 50%, #C23A82 100%);
+  --gradient-halo: conic-gradient(from 0deg, rgba(201,168,76,0.55), rgba(194,58,130,0.4), rgba(31,168,160,0.4), rgba(201,168,76,0.55));
 
   /* Animation */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
@@ -174,6 +185,20 @@ body {
   color: var(--color-brand-gold);
 }
 
+.text-teal {
+  color: var(--color-brand-teal);
+}
+
+.text-magenta {
+  color: var(--color-brand-magenta);
+}
+
+.text-flourish {
+  font-family: var(--font-flourish);
+  font-style: italic;
+  font-weight: 500;
+}
+
 @keyframes shimmer {
   0% { background-position: 0% center; }
   100% { background-position: 200% center; }
@@ -241,6 +266,22 @@ body {
   width: 4rem;
   height: 2px;
   background: var(--gradient-gold);
+  border-radius: 9999px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.regal-divider {
+  width: 4rem;
+  height: 2px;
+  background: var(--gradient-regal);
+  border-radius: 9999px;
+}
+
+.regal-divider-center {
+  width: 4rem;
+  height: 2px;
+  background: var(--gradient-regal);
   border-radius: 9999px;
   margin-left: auto;
   margin-right: auto;
@@ -440,9 +481,9 @@ body {
 .skeleton {
   background: linear-gradient(
     90deg,
-    rgba(26, 58, 107, 0.6) 0%,
-    rgba(36, 63, 115, 0.8) 50%,
-    rgba(26, 58, 107, 0.6) 100%
+    rgba(42, 31, 51, 0.6) 0%,
+    rgba(55, 42, 66, 0.8) 50%,
+    rgba(42, 31, 51, 0.6) 100%
   );
   background-size: 200% 100%;
   animation: skeleton-loading 1.5s ease-in-out infinite;
@@ -486,7 +527,7 @@ body {
   left: 0;
   right: 0;
   z-index: var(--z-sticky);
-  background: rgba(10, 22, 40, 0.95);
+  background: rgba(16, 11, 22, 0.95);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-top: 1px solid rgba(201, 168, 76, 0.2);

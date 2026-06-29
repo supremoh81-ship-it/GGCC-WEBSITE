@@ -98,18 +98,23 @@ export default function MinistriesPage() {
 
       {/* CTA */}
       <section className="section-padding-sm bg-brand-blue">
-        <div className="container mx-auto px-4 max-w-3xl text-center">
+        <div className="container mx-auto px-4 max-w-3xl">
           <FadeInUp>
-            <h2 className="text-display-sm font-display text-white mb-4">
-              Not Sure Where to <GoldShimmer>Start?</GoldShimmer>
-            </h2>
-            <p className="text-body text-text-muted mb-8">
-              Reach out to us and we will help you find the right ministry unit based on your gifts,
-              passion, and availability.
-            </p>
-            <Link href="/contact" className="btn-gold">
-              Get in Touch
-            </Link>
+            <div className="glass-card rounded-3xl overflow-hidden text-center">
+              <div className="h-[3px] bg-gradient-regal" />
+              <div className="p-10">
+                <h2 className="text-display-sm font-display text-white mb-4">
+                  Not Sure Where to <GoldShimmer>Start?</GoldShimmer>
+                </h2>
+                <p className="text-body text-text-muted mb-8">
+                  Reach out to us and we will help you find the right ministry unit based on your gifts,
+                  passion, and availability.
+                </p>
+                <Link href="/contact" className="btn-gold">
+                  Get in Touch
+                </Link>
+              </div>
+            </div>
           </FadeInUp>
         </div>
       </section>

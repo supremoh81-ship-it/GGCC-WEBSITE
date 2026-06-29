@@ -72,7 +72,8 @@ export default function SubmitTestimonyPage() {
                 </Link>
               </div>
             ) : (
-              <div className="glass-card rounded-3xl p-8">
+              <div className="glass-card rounded-3xl p-8 relative overflow-hidden">
+                <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-regal" />
                 <div className="text-center mb-8">
                   <h1 className="text-2xl font-display font-bold text-white mb-2">
                     Share Your <GoldShimmer>Testimony</GoldShimmer>

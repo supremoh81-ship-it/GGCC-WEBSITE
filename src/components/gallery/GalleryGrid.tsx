@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { format } from 'date-fns'
 import { X, ChevronLeft, ChevronRight, Camera, Download } from 'lucide-react'
 import { StaggerChildren, StaggerItem } from '@/components/motion/StaggerChildren'
+import { cn } from '@/lib/utils/cn'
 
 export interface GalleryPhotoItem {
   id: string
@@ -22,6 +23,8 @@ function cldDownloadUrl(url: string) {
 function cldFit(url: string, size: number) {
   return url.replace('/upload/', `/upload/c_limit,w_${size},h_${size},q_auto,f_auto/`)
 }
+
+const accentClasses = ['text-brand-gold', 'text-brand-teal-light', 'text-brand-magenta-light']
 
 export function GalleryGrid({ photos }: { photos: GalleryPhotoItem[] }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
@@ -70,7 +73,7 @@ export function GalleryGrid({ photos }: { photos: GalleryPhotoItem[] }) {
                 className="object-contain group-hover:scale-105 transition-transform duration-500"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/85 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3">
-                <p className="text-[11px] font-semibold text-brand-gold uppercase tracking-wider">
+                <p className={cn('text-[11px] font-semibold uppercase tracking-wider', accentClasses[i % accentClasses.length])}>
                   {photo.categoryTitle}
                 </p>
                 <p className="text-xs text-white/80">{format(new Date(photo.createdAt), 'MMM d, yyyy')}</p>
@@ -116,7 +119,7 @@ export function GalleryGrid({ photos }: { photos: GalleryPhotoItem[] }) {
               className="max-h-[75vh] w-auto rounded-2xl shadow-2xl object-contain"
             />
             <div className="text-center">
-              <p className="text-brand-gold text-sm font-semibold uppercase tracking-wider">
+              <p className={cn('text-sm font-semibold uppercase tracking-wider', accentClasses[(openIndex ?? 0) % accentClasses.length])}>
                 {active.categoryTitle}
               </p>
               <p className="text-text-muted text-xs mt-0.5">

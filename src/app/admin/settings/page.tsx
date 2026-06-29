@@ -56,7 +56,7 @@ export default function AdminSettingsPage() {
         <FadeInUp>
           <div className="glass-card rounded-2xl p-7 space-y-5 max-w-xl">
             <h2 className="font-semibold text-white">Church Information</h2>
-            <Input label="Church Name" defaultValue="Greater Grace Christian Center" />
+            <Input label="Church Name" defaultValue="Grace for Greatness Christian Centre" />
             <Input label="Tagline" defaultValue="Rooted in faith. Reaching the world." />
             <Input label="Address" defaultValue="1 Grace Boulevard, Houston, TX 77001" />
             <Input label="Phone" defaultValue="+1 (713) 555-0180" type="tel" />

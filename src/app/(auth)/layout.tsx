@@ -58,8 +58,9 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
       </div>
 
       {/* Right panel */}
-      <div className="flex-1 flex items-center justify-center p-6 lg:p-12">
-        <div className="w-full max-w-md">
+      <div className="flex-1 relative flex items-center justify-center p-6 lg:p-12 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-radial-gold opacity-40 pointer-events-none" />
+        <div className="relative w-full max-w-md">
           {/* Mobile logo */}
           <div className="lg:hidden mb-8 flex justify-center">
             <Link href="/" className="flex items-center gap-2">

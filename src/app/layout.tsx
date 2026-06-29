@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Inter, Playfair_Display } from 'next/font/google'
+import { Inter, Playfair_Display, Cormorant_Garamond } from 'next/font/google'
 import './globals.css'
 import { Providers } from '@/components/providers'
 import { SiteHeader } from '@/components/layout/SiteHeader'
@@ -19,19 +19,27 @@ const playfair = Playfair_Display({
   display: 'swap',
 })
 
+const cormorant = Cormorant_Garamond({
+  subsets: ['latin'],
+  variable: '--font-cormorant',
+  style: ['italic', 'normal'],
+  weight: ['400', '500', '600'],
+  display: 'swap',
+})
+
 const siteUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://ggcc.church'
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    template: '%s | GGCC Church',
-    default: 'GGCC | Greater Grace Christian Center',
+    template: '%s | Grace for Greatness Christian Centre',
+    default: 'Grace for Greatness Christian Centre (GGCC)',
   },
   description:
-    'Greater Grace Christian Center — a global church community rooted in faith, serving the world with love, purpose, and the transforming power of the Gospel.',
+    'Grace for Greatness Christian Centre — a global church community rooted in faith, serving the world with love, purpose, and the transforming power of the Gospel.',
   keywords: [
     'GGCC',
-    'Greater Grace Christian Center',
+    'Grace for Greatness Christian Centre',
     'church',
     'sermons',
     'worship',
@@ -45,8 +53,8 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: siteUrl,
-    siteName: 'GGCC',
-    title: 'GGCC | Greater Grace Christian Center',
+    siteName: 'Grace for Greatness Christian Centre',
+    title: 'Grace for Greatness Christian Centre (GGCC)',
     description:
       'A global church community rooted in faith, serving the world with love, purpose, and the transforming power of the Gospel.',
     images: [
@@ -54,13 +62,13 @@ export const metadata: Metadata = {
         url: '/images/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'GGCC — Greater Grace Christian Center',
+        alt: 'GGCC — Grace for Greatness Christian Centre',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'GGCC | Greater Grace Christian Center',
+    title: 'Grace for Greatness Christian Centre (GGCC)',
     description:
       'A global church community rooted in faith, serving the world with love, purpose, and the transforming power of the Gospel.',
     images: ['/images/og-image.jpg'],
@@ -84,7 +92,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${playfair.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${playfair.variable} ${cormorant.variable}`}>
       <body className="font-body bg-brand-navy text-white antialiased">
         <Providers>
           <SiteHeader />
@@ -95,7 +103,7 @@ export default function RootLayout({
             position="bottom-right"
             toastOptions={{
               style: {
-                background: 'rgba(15, 35, 71, 0.95)',
+                background: 'rgba(28, 20, 34, 0.95)',
                 border: '1px solid rgba(201, 168, 76, 0.3)',
                 color: 'white',
                 backdropFilter: 'blur(12px)',

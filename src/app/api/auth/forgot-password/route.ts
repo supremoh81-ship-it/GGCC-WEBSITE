@@ -30,13 +30,13 @@ export async function POST(req: Request) {
         to: email,
         subject: 'Reset your GGCC password',
         html: `
-          <div style="font-family:system-ui,sans-serif;max-width:480px;margin:0 auto;padding:32px;background:#0A1628;color:#ffffff;border-radius:16px;">
+          <div style="font-family:system-ui,sans-serif;max-width:480px;margin:0 auto;padding:32px;background:#100B16;color:#ffffff;border-radius:16px;">
             <h2 style="color:#C9A84C;font-size:24px;margin-bottom:16px;">Password Reset</h2>
             <p style="color:#94a3b8;margin-bottom:24px;">
               You requested a password reset for your GGCC account. Click the button below to set a new password.
               This link expires in 1 hour.
             </p>
-            <a href="${resetUrl}" style="display:inline-block;background:#C9A84C;color:#0A1628;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:600;">
+            <a href="${resetUrl}" style="display:inline-block;background:#C9A84C;color:#100B16;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:600;">
               Reset Password
             </a>
             <p style="color:#64748b;font-size:12px;margin-top:24px;">

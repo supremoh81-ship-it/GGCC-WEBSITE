@@ -28,6 +28,7 @@ export function FeaturedSermonPlayer({
 
   return (
     <div className="relative aspect-video lg:aspect-auto lg:min-h-[400px] group">
+      <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-regal z-10" />
       {thumbnailUrl ? (
         <Image
           src={thumbnailUrl}

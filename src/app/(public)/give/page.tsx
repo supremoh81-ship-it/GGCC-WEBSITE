@@ -4,6 +4,7 @@ import { StaggerChildren, StaggerItem } from '@/components/motion/StaggerChildre
 import { GoldShimmer } from '@/components/motion/GoldShimmer'
 import { GivingForm } from '@/components/giving/GivingForm'
 import { ProgressBar } from '@/components/ui/ProgressBar'
+import { SignatureHalo } from '@/components/motion/SignatureHalo'
 import { Shield, Globe, Heart, BookOpen } from 'lucide-react'
 
 export const metadata: Metadata = {
@@ -19,12 +20,22 @@ const funds = [
   { name: 'Scholarship Fund', icon: BookOpen, desc: 'Provides education support for young believers.' },
 ]
 
+const fundAccents = [
+  { chip: 'bg-brand-gold/10', icon: 'text-brand-gold' },
+  { chip: 'bg-brand-teal/10', icon: 'text-brand-teal-light' },
+  { chip: 'bg-brand-magenta/10', icon: 'text-brand-magenta-light' },
+  { chip: 'bg-brand-gold/10', icon: 'text-brand-gold' },
+]
+
 export default function GivePage() {
   return (
     <div className="min-h-screen bg-brand-navy pt-24">
       {/* Header */}
       <section className="section-padding-sm bg-brand-blue relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-radial-gold opacity-40 pointer-events-none" />
+        <div className="absolute left-1/2 top-[0%] -translate-x-1/2 pointer-events-none opacity-60">
+          <SignatureHalo size={480} />
+        </div>
         <div className="container mx-auto px-4 max-w-5xl relative text-center">
           <FadeInUp>
             <span className="section-label mb-4 inline-flex justify-center">Online Giving</span>
@@ -53,39 +64,45 @@ export default function GivePage() {
                 <div>
                   <h2 className="font-display font-bold text-white text-xl mb-5">Where Your Gift Goes</h2>
                   <div className="space-y-3">
-                    {funds.map((fund) => (
-                      <div key={fund.name} className="glass-card rounded-xl p-4 flex items-start gap-4">
-                        <div className="w-9 h-9 rounded-lg bg-brand-gold/10 flex items-center justify-center flex-shrink-0">
-                          <fund.icon className="h-4.5 w-4.5 text-brand-gold" />
+                    {funds.map((fund, i) => {
+                      const accent = fundAccents[i % fundAccents.length]
+                      return (
+                        <div key={fund.name} className="glass-card rounded-xl p-4 flex items-start gap-4">
+                          <div className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${accent.chip}`}>
+                            <fund.icon className={`h-4.5 w-4.5 ${accent.icon}`} />
+                          </div>
+                          <div>
+                            <div className="font-medium text-white text-sm">{fund.name}</div>
+                            <div className="text-xs text-text-muted mt-0.5">{fund.desc}</div>
+                          </div>
                         </div>
-                        <div>
-                          <div className="font-medium text-white text-sm">{fund.name}</div>
-                          <div className="text-xs text-text-muted mt-0.5">{fund.desc}</div>
-                        </div>
-                      </div>
-                    ))}
+                      )
+                    })}
                   </div>
                 </div>
               </FadeInUp>
 
               {/* Featured campaign */}
               <FadeInUp delay={0.2}>
-                <div className="glass-card rounded-2xl p-6" style={{ border: '1px solid rgba(201, 168, 76, 0.3)' }}>
-                  <div className="text-xs font-semibold text-brand-gold tracking-widest uppercase mb-3">
-                    Featured Campaign
+                <div className="glass-card rounded-2xl overflow-hidden" style={{ border: '1px solid rgba(201, 168, 76, 0.3)' }}>
+                  <div className="h-[3px] bg-gradient-regal" />
+                  <div className="p-6">
+                    <div className="text-xs font-semibold text-brand-gold tracking-widest uppercase mb-3">
+                      Featured Campaign
+                    </div>
+                    <h3 className="font-display font-bold text-white text-lg mb-2">
+                      Building for the Next Generation
+                    </h3>
+                    <p className="text-sm text-text-muted mb-5">
+                      Help us complete our new facility dedicated to discipleship and community impact.
+                    </p>
+                    <div className="flex justify-between text-sm mb-2">
+                      <span className="text-brand-gold font-semibold">$337,500 raised</span>
+                      <span className="text-text-muted">of $500,000 goal</span>
+                    </div>
+                    <ProgressBar value={337500} max={500000} size="md" />
+                    <div className="text-xs text-text-muted mt-2">1,842 donors &bull; Closes Dec 31, 2025</div>
                   </div>
-                  <h3 className="font-display font-bold text-white text-lg mb-2">
-                    Building for the Next Generation
-                  </h3>
-                  <p className="text-sm text-text-muted mb-5">
-                    Help us complete our new facility dedicated to discipleship and community impact.
-                  </p>
-                  <div className="flex justify-between text-sm mb-2">
-                    <span className="text-brand-gold font-semibold">$337,500 raised</span>
-                    <span className="text-text-muted">of $500,000 goal</span>
-                  </div>
-                  <ProgressBar value={337500} max={500000} size="md" />
-                  <div className="text-xs text-text-muted mt-2">1,842 donors &bull; Closes Dec 31, 2025</div>
                 </div>
               </FadeInUp>
 

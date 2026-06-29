@@ -136,8 +136,11 @@ export default async function SermonDetailPage({ params }: Props) {
 
             {sermon.videoUrl && (
               <FadeInUp>
-                <div className="aspect-video rounded-2xl overflow-hidden bg-black/40 border border-white/10">
-                  <VideoEmbed url={sermon.videoUrl} title={sermon.title} className="w-full h-full" />
+                <div className="relative rounded-2xl overflow-hidden">
+                  <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-regal z-10" />
+                  <div className="aspect-video overflow-hidden bg-black/40 border border-white/10 rounded-2xl">
+                    <VideoEmbed url={sermon.videoUrl} title={sermon.title} className="w-full h-full" />
+                  </div>
                 </div>
               </FadeInUp>
             )}
@@ -247,25 +250,36 @@ export default async function SermonDetailPage({ params }: Props) {
                 <div className="glass-card rounded-2xl p-5">
                   <h3 className="text-xs text-text-muted uppercase tracking-widest mb-4">More Sermons</h3>
                   <div className="space-y-3">
-                    {relatedSermons.map((s) => (
-                      <Link
-                        key={s.id}
-                        href={`/sermons/${s.slug}`}
-                        className="flex items-start gap-3 group"
-                      >
-                        <div className="w-8 h-8 rounded-lg bg-brand-gold/10 flex items-center justify-center flex-shrink-0 group-hover:bg-brand-gold/20 transition-colors">
-                          <Play className="h-3.5 w-3.5 text-brand-gold fill-current ml-0.5" />
-                        </div>
-                        <div className="min-w-0">
-                          <div className="text-sm text-white group-hover:text-brand-gold transition-colors line-clamp-2 font-medium">
-                            {s.title}
+                    {relatedSermons.map((s, i) => {
+                      const accent = ['gold', 'teal', 'magenta'][i % 3]
+                      const iconBg =
+                        accent === 'teal'
+                          ? 'bg-brand-teal/10 group-hover:bg-brand-teal/20'
+                          : accent === 'magenta'
+                            ? 'bg-brand-magenta/10 group-hover:bg-brand-magenta/20'
+                            : 'bg-brand-gold/10 group-hover:bg-brand-gold/20'
+                      const iconColor =
+                        accent === 'teal' ? 'text-brand-teal' : accent === 'magenta' ? 'text-brand-magenta' : 'text-brand-gold'
+                      return (
+                        <Link
+                          key={s.id}
+                          href={`/sermons/${s.slug}`}
+                          className="flex items-start gap-3 group"
+                        >
+                          <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors ${iconBg}`}>
+                            <Play className={`h-3.5 w-3.5 fill-current ml-0.5 ${iconColor}`} />
                           </div>
-                          {s.speaker && (
-                            <div className="text-xs text-text-muted mt-0.5">{s.speaker.name}</div>
-                          )}
-                        </div>
-                      </Link>
-                    ))}
+                          <div className="min-w-0">
+                            <div className="text-sm text-white group-hover:text-brand-gold transition-colors line-clamp-2 font-medium">
+                              {s.title}
+                            </div>
+                            {s.speaker && (
+                              <div className="text-xs text-text-muted mt-0.5">{s.speaker.name}</div>
+                            )}
+                          </div>
+                        </Link>
+                      )
+                    })}
                   </div>
                 </div>
               </FadeInUp>

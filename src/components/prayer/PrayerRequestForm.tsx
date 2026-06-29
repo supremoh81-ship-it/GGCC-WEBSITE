@@ -27,18 +27,24 @@ const visibilityOptions = [
     label: 'Public',
     desc: 'Shared on prayer wall',
     icon: Globe,
+    activeClasses: 'border-brand-gold/60 bg-brand-gold/10 text-white',
+    iconActive: 'text-brand-gold',
   },
   {
     value: 'ANONYMOUS' as const,
     label: 'Anonymous',
     desc: 'Posted without your name',
     icon: Eye,
+    activeClasses: 'border-brand-teal/60 bg-brand-teal/10 text-white',
+    iconActive: 'text-brand-teal',
   },
   {
     value: 'PRIVATE' as const,
     label: 'Private',
     desc: 'Only seen by our team',
     icon: Lock,
+    activeClasses: 'border-brand-magenta/60 bg-brand-magenta/10 text-white',
+    iconActive: 'text-brand-magenta',
   },
 ]
 
@@ -88,7 +94,8 @@ export function PrayerRequestForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="glass-card rounded-3xl p-8 space-y-6">
+    <form onSubmit={handleSubmit(onSubmit)} className="glass-card rounded-3xl p-8 space-y-6 relative overflow-hidden">
+      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-regal" />
       {/* Visibility selector */}
       <div>
         <label className="block text-sm font-medium text-text-secondary mb-3">
@@ -102,11 +109,11 @@ export function PrayerRequestForm() {
               onClick={() => setValue('visibility', opt.value)}
               className={`p-3 rounded-xl border text-center transition-all duration-200 ${
                 visibility === opt.value
-                  ? 'border-brand-gold/60 bg-brand-gold/10 text-white'
+                  ? opt.activeClasses
                   : 'border-white/10 text-text-muted hover:border-white/25 hover:text-white'
               }`}
             >
-              <opt.icon className={`h-4 w-4 mx-auto mb-1 ${visibility === opt.value ? 'text-brand-gold' : ''}`} />
+              <opt.icon className={`h-4 w-4 mx-auto mb-1 ${visibility === opt.value ? opt.iconActive : ''}`} />
               <div className="text-xs font-medium">{opt.label}</div>
               <div className="text-[10px] opacity-60 mt-0.5">{opt.desc}</div>
             </button>

@@ -7,6 +7,13 @@ import { GoldShimmer } from '@/components/motion/GoldShimmer'
 import { Quote, ArrowRight } from 'lucide-react'
 import { Badge } from '@/components/ui/Badge'
 
+const categoryAccent: Record<string, 'gold' | 'teal' | 'magenta'> = {
+  Healing: 'teal',
+  Restoration: 'magenta',
+  Salvation: 'gold',
+}
+const accentRotation = ['gold', 'teal', 'magenta'] as const
+
 export const metadata: Metadata = {
   title: 'Testimonies',
   description: 'Read and share stories of transformation, healing, and God\'s faithfulness at GGCC.',
@@ -76,37 +83,47 @@ export default function TestimoniesPage() {
       <section className="section-padding">
         <div className="container mx-auto px-4 max-w-7xl">
           <StaggerChildren className="grid md:grid-cols-2 gap-6 mb-16">
-            {testimonies.map((t) => (
-              <StaggerItem key={t.id}>
-                <div className={`glass-card rounded-2xl p-7 h-full flex flex-col gap-5 ${t.isFeatured ? 'border-brand-gold/25' : ''}`}>
-                  <div className="flex items-start justify-between">
-                    <Quote className="h-8 w-8 text-brand-gold/30" />
-                    <Badge variant="gold">{t.category}</Badge>
-                  </div>
-
-                  <h3 className="font-display font-semibold text-white text-xl">{t.title}</h3>
-
-                  <p className="text-text-muted text-sm leading-relaxed flex-1">
-                    &ldquo;{t.body}&rdquo;
-                  </p>
-
-                  <div className="flex items-center gap-3 pt-4 border-t border-white/8">
-                    <div className="relative w-10 h-10 rounded-full overflow-hidden border border-brand-gold/25">
-                      <Image src={t.avatar} alt={t.name} fill className="object-cover" />
+            {testimonies.map((t, i) => {
+              const accent = categoryAccent[t.category] ?? accentRotation[i % accentRotation.length]
+              const quoteColor =
+                accent === 'teal' ? 'text-brand-teal/30' : accent === 'magenta' ? 'text-brand-magenta/30' : 'text-brand-gold/30'
+              const avatarBorder =
+                accent === 'teal' ? 'border-brand-teal/25' : accent === 'magenta' ? 'border-brand-magenta/25' : 'border-brand-gold/25'
+              const featuredBorder =
+                accent === 'teal' ? 'border-brand-teal/25' : accent === 'magenta' ? 'border-brand-magenta/25' : 'border-brand-gold/25'
+              return (
+                <StaggerItem key={t.id}>
+                  <div className={`glass-card rounded-2xl p-7 h-full flex flex-col gap-5 ${t.isFeatured ? featuredBorder : ''}`}>
+                    <div className="flex items-start justify-between">
+                      <Quote className={`h-8 w-8 ${quoteColor}`} />
+                      <Badge variant={accent}>{t.category}</Badge>
                     </div>
-                    <div>
-                      <div className="text-sm font-semibold text-white">{t.name}</div>
-                      <div className="text-xs text-text-muted">{t.location}</div>
+
+                    <h3 className="font-display font-semibold text-white text-xl">{t.title}</h3>
+
+                    <p className="text-text-muted text-sm leading-relaxed flex-1">
+                      &ldquo;{t.body}&rdquo;
+                    </p>
+
+                    <div className="flex items-center gap-3 pt-4 border-t border-white/8">
+                      <div className={`relative w-10 h-10 rounded-full overflow-hidden border ${avatarBorder}`}>
+                        <Image src={t.avatar} alt={t.name} fill className="object-cover" />
+                      </div>
+                      <div>
+                        <div className="text-sm font-semibold text-white">{t.name}</div>
+                        <div className="text-xs text-text-muted">{t.location}</div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </StaggerItem>
-            ))}
+                </StaggerItem>
+              )
+            })}
           </StaggerChildren>
 
           {/* Submit CTA */}
           <FadeInUp>
-            <div className="glass-card rounded-3xl p-10 text-center" style={{ border: '1px solid rgba(201, 168, 76, 0.25)' }}>
+            <div className="glass-card rounded-3xl p-10 text-center border border-brand-gold/25 relative overflow-hidden">
+              <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-regal" />
               <h2 className="font-display font-bold text-white text-2xl mb-3">
                 Has God Done Something in Your Life?
               </h2>

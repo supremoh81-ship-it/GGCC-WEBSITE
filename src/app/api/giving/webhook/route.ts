@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
         to: email,
         subject: 'Thank you for your gift to GGCC',
         html: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #0A1628; color: white; padding: 40px; border-radius: 16px;">
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #100B16; color: white; padding: 40px; border-radius: 16px;">
             <h1 style="color: #C9A84C; font-family: Georgia, serif;">Thank You for Your Gift</h1>
             <p>Dear ${intent.metadata?.donorName ?? 'Friend'},</p>
             <p>Your generous gift of <strong style="color: #C9A84C;">$${(intent.amount / 100).toFixed(2)}</strong> to the <strong>${intent.metadata?.fund ?? 'General Fund'}</strong> has been received.</p>

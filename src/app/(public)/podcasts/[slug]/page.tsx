@@ -55,7 +55,8 @@ export default async function PodcastShowPage({ params }: Props) {
         </FadeInUp>
 
         <FadeInUp>
-          <div className="flex flex-col sm:flex-row items-start gap-6 mb-12">
+          <div className="relative flex flex-col sm:flex-row items-start gap-6 mb-12 glass-card rounded-2xl p-6 overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-regal" />
             {show.artworkUrl ? (
               <img
                 src={show.artworkUrl}
@@ -119,43 +120,54 @@ export default async function PodcastShowPage({ params }: Props) {
             </div>
           ) : (
             <div className="space-y-3">
-              {show.episodes.map((ep, i) => (
-                <div
-                  key={ep.id}
-                  className="glass-card rounded-xl p-4 flex items-center gap-4 group hover:border-white/20 transition-all"
-                >
-                  <div className="w-8 text-center text-text-muted text-xs font-mono flex-shrink-0">
-                    {i + 1}
-                  </div>
-
-                  <button className="w-10 h-10 rounded-full bg-brand-gold/10 border border-brand-gold/20 flex items-center justify-center flex-shrink-0 hover:bg-brand-gold/20 transition-colors group-hover:border-brand-gold/40">
-                    <Play className="h-4 w-4 text-brand-gold fill-current ml-0.5" />
-                  </button>
-
-                  <div className="flex-1 min-w-0">
-                    <div className="text-white font-medium group-hover:text-brand-gold transition-colors line-clamp-1">
-                      {ep.title}
+              {show.episodes.map((ep, i) => {
+                const accent = ['gold', 'teal', 'magenta'][i % 3]
+                const accentBtn =
+                  accent === 'teal'
+                    ? 'bg-brand-teal/10 border-brand-teal/20 hover:bg-brand-teal/20 group-hover:border-brand-teal/40'
+                    : accent === 'magenta'
+                      ? 'bg-brand-magenta/10 border-brand-magenta/20 hover:bg-brand-magenta/20 group-hover:border-brand-magenta/40'
+                      : 'bg-brand-gold/10 border-brand-gold/20 hover:bg-brand-gold/20 group-hover:border-brand-gold/40'
+                const accentIcon =
+                  accent === 'teal' ? 'text-brand-teal' : accent === 'magenta' ? 'text-brand-magenta' : 'text-brand-gold'
+                return (
+                  <div
+                    key={ep.id}
+                    className="glass-card rounded-xl p-4 flex items-center gap-4 group hover:border-white/20 transition-all"
+                  >
+                    <div className="w-8 text-center text-text-muted text-xs font-mono flex-shrink-0">
+                      {i + 1}
                     </div>
-                    {ep.description && (
-                      <p className="text-xs text-text-muted mt-0.5 line-clamp-1">{ep.description}</p>
-                    )}
-                  </div>
 
-                  <div className="flex items-center gap-3 flex-shrink-0">
-                    {ep.publishedAt && (
-                      <span className="text-xs text-text-muted hidden md:block">
-                        {format(new Date(ep.publishedAt), 'MMM d, yyyy')}
-                      </span>
-                    )}
-                    {ep.duration && (
-                      <span className="text-xs text-text-muted flex items-center gap-1 hidden sm:flex">
-                        <Clock className="h-3 w-3" />
-                        {formatDuration(ep.duration)}
-                      </span>
-                    )}
+                    <button className={`w-10 h-10 rounded-full border flex items-center justify-center flex-shrink-0 transition-colors ${accentBtn}`}>
+                      <Play className={`h-4 w-4 fill-current ml-0.5 ${accentIcon}`} />
+                    </button>
+
+                    <div className="flex-1 min-w-0">
+                      <div className="text-white font-medium group-hover:text-brand-gold transition-colors line-clamp-1">
+                        {ep.title}
+                      </div>
+                      {ep.description && (
+                        <p className="text-xs text-text-muted mt-0.5 line-clamp-1">{ep.description}</p>
+                      )}
+                    </div>
+
+                    <div className="flex items-center gap-3 flex-shrink-0">
+                      {ep.publishedAt && (
+                        <span className="text-xs text-text-muted hidden md:block">
+                          {format(new Date(ep.publishedAt), 'MMM d, yyyy')}
+                        </span>
+                      )}
+                      {ep.duration && (
+                        <span className="text-xs text-text-muted flex items-center gap-1 hidden sm:flex">
+                          <Clock className="h-3 w-3" />
+                          {formatDuration(ep.duration)}
+                        </span>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
           )}
         </FadeInUp>

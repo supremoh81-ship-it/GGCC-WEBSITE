@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Play, Heart, ArrowDown, Tv } from 'lucide-react'
 import { AmbientParticles } from '@/components/motion/AmbientParticles'
 import { GoldShimmer } from '@/components/motion/GoldShimmer'
+import { SignatureHalo } from '@/components/motion/SignatureHalo'
 
 export function HeroSection() {
   return (
@@ -25,24 +26,19 @@ export function HeroSection() {
         }}
       />
 
-      {/* Top-to-mid hard fade: keeps the entire text block on pure dark navy */}
+      {/* Top-to-mid hard fade: keeps the entire text block on pure dark ink */}
       <div
         className="absolute inset-0"
         style={{
           background:
-            'linear-gradient(to bottom, #0A1628 0%, #0A1628 55%, rgba(10,22,40,0.85) 75%, rgba(10,22,40,0.4) 100%)',
+            'linear-gradient(to bottom, #100B16 0%, #100B16 55%, rgba(16,11,22,0.85) 75%, rgba(16,11,22,0.4) 100%)',
         }}
       />
 
-      {/* Subtle gold radial bloom behind the headline */}
-      <div
-        className="absolute left-1/2 -translate-x-1/2 w-[700px] h-[340px] rounded-full pointer-events-none"
-        style={{
-          top: '18%',
-          background: 'radial-gradient(ellipse at center, rgba(201,168,76,0.07) 0%, transparent 70%)',
-          filter: 'blur(32px)',
-        }}
-      />
+      {/* Signature halo — gold ring + teal/magenta bloom + dove, echoing the crest */}
+      <div className="absolute left-1/2 top-[8%] -translate-x-1/2 pointer-events-none opacity-90">
+        <SignatureHalo size={620} />
+      </div>
 
       {/* Ambient particle canvas */}
       <AmbientParticles count={60} />
@@ -60,7 +56,7 @@ export function HeroSection() {
           className="inline-flex items-center gap-2 mb-7"
         >
           <span className="section-label">
-            Welcome to GGCC
+            Welcome to Grace for Greatness
           </span>
         </motion.div>
 
@@ -70,11 +66,21 @@ export function HeroSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
           className="text-display-xl font-display text-white mb-6 text-balance"
-          style={{ textShadow: '0 2px 32px rgba(10,22,40,0.85)' }}
+          style={{ textShadow: '0 2px 32px rgba(16,11,22,0.85)' }}
         >
           Your Place to Grow<br className="hidden sm:block" /> into{' '}
           <GoldShimmer>Greatness</GoldShimmer>
         </motion.h1>
+
+        {/* Flourish tagline */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.48 }}
+          className="text-flourish text-xl md:text-2xl text-brand-gold-light/90 mb-5"
+        >
+          &ldquo;For we are His workmanship, created for greatness.&rdquo;
+        </motion.p>
 
         {/* Sub-headline */}
         <motion.p
@@ -120,12 +126,12 @@ export function HeroSection() {
           className="mt-16 grid grid-cols-3 gap-8 max-w-lg mx-auto"
         >
           {[
-            { value: '5K+', label: 'Global Members' },
-            { value: '6+', label: 'Nations Reached' },
-            { value: '5yr', label: 'Years of Ministry' },
+            { value: '5K+', label: 'Global Members', color: 'text-brand-gold' },
+            { value: '6+', label: 'Nations Reached', color: 'text-brand-teal-light' },
+            { value: '5yr', label: 'Years of Ministry', color: 'text-brand-magenta-light' },
           ].map((stat) => (
             <div key={stat.label} className="text-center">
-              <div className="font-display font-bold text-2xl text-brand-gold mb-1">
+              <div className={`font-display font-bold text-2xl mb-1 ${stat.color}`}>
                 {stat.value}
               </div>
               <div className="text-xs text-text-muted tracking-wide">{stat.label}</div>

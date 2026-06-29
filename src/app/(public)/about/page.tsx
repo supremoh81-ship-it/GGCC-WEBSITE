@@ -5,11 +5,12 @@ import { FadeInUp } from '@/components/motion/FadeInUp'
 import { StaggerChildren, StaggerItem } from '@/components/motion/StaggerChildren'
 import { GoldShimmer } from '@/components/motion/GoldShimmer'
 import { CountUp } from '@/components/motion/CountUp'
+import { SignatureHalo } from '@/components/motion/SignatureHalo'
 import { ArrowRight, BookOpen, Mic, Globe, TrendingUp, Heart, Users, Church } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'About Us',
-  description: 'Learn about Grace for Greatness Christian Center — our story, mission, leadership, and global vision.',
+  description: 'Learn about Grace for Greatness Christian Centre — our story, mission, leadership, and global vision.',
 }
 
 const coreValues = [
@@ -32,6 +33,14 @@ const anchorPoints = [
   { icon: Globe, label: 'Larger', desc: 'through Evangelism' },
 ]
 
+const anchorAccents = [
+  { chip: 'bg-brand-gold/10 border-brand-gold/20', icon: 'text-brand-gold' },
+  { chip: 'bg-brand-teal/10 border-brand-teal/25', icon: 'text-brand-teal-light' },
+  { chip: 'bg-brand-gold/10 border-brand-gold/20', icon: 'text-brand-gold' },
+  { chip: 'bg-brand-magenta/10 border-brand-magenta/25', icon: 'text-brand-magenta-light' },
+  { chip: 'bg-brand-gold/10 border-brand-gold/20', icon: 'text-brand-gold' },
+]
+
 const leaderRoles = [
   { icon: BookOpen, label: 'Author' },
   { icon: Mic, label: 'Speaker' },
@@ -46,6 +55,9 @@ export default function AboutPage() {
       {/* Hero — Intro Story (item 3) */}
       <section className="section-padding bg-brand-blue relative overflow-hidden">
         <div className="absolute inset-0 bg-pattern-grid opacity-30 pointer-events-none" />
+        <div className="absolute right-[-8%] top-[6%] pointer-events-none opacity-60 hidden lg:block">
+          <SignatureHalo size={460} />
+        </div>
         <div className="container mx-auto px-4 max-w-7xl relative">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <FadeInUp>
@@ -54,7 +66,7 @@ export default function AboutPage() {
                 Born to Restore, Built to <GoldShimmer>Awaken Greatness</GoldShimmer>
               </h1>
               <p className="text-body-lg text-text-muted mb-4">
-                Grace for Greatness Christian Center was born from a divine calling to restore broken lives
+                Grace for Greatness Christian Centre was born from a divine calling to restore broken lives
                 and awaken greatness in people. Led by Reverend Olumuyiwa Abraham and Reverend Oluwaseun
                 Abraham, our church exists to see people saved, restored, discipled, equipped and empowered
                 to serve and to lead.
@@ -138,15 +150,18 @@ export default function AboutPage() {
                   Our Anchor Statement
                 </h3>
                 <div className="grid sm:grid-cols-5 gap-4">
-                  {anchorPoints.map(({ icon: Icon, label, desc }) => (
-                    <div key={label} className="text-center">
-                      <div className="w-12 h-12 rounded-xl bg-brand-gold/10 border border-brand-gold/20 flex items-center justify-center mx-auto mb-3">
-                        <Icon className="h-5 w-5 text-brand-gold" />
+                  {anchorPoints.map(({ icon: Icon, label, desc }, i) => {
+                    const accent = anchorAccents[i % anchorAccents.length]
+                    return (
+                      <div key={label} className="text-center">
+                        <div className={`w-12 h-12 rounded-xl border flex items-center justify-center mx-auto mb-3 ${accent.chip}`}>
+                          <Icon className={`h-5 w-5 ${accent.icon}`} />
+                        </div>
+                        <p className="font-display font-bold text-white text-sm">{label}</p>
+                        <p className="text-[11px] text-text-muted mt-0.5">{desc}</p>
                       </div>
-                      <p className="font-display font-bold text-white text-sm">{label}</p>
-                      <p className="text-[11px] text-text-muted mt-0.5">{desc}</p>
-                    </div>
-                  ))}
+                    )
+                  })}
                 </div>
               </div>
             </StaggerItem>
@@ -185,13 +200,16 @@ export default function AboutPage() {
 
             {/* Our Target */}
             <StaggerItem>
-              <div className="glass-card rounded-2xl p-8 border border-brand-gold/20">
+              <div className="glass-card rounded-2xl overflow-hidden border border-brand-gold/20">
+                <div className="h-[3px] bg-gradient-regal" />
+                <div className="p-8">
                 <h3 className="font-display font-bold text-white text-xl mb-4">Our Target</h3>
                 <p className="text-text-muted leading-relaxed">
                   Young adults and middle-age youths who have lost hope, misunderstood the message of grace,
                   held wrong belief systems, or suffered rejection. We believe that through restoration,
                   discipleship, and empowerment, greatness can be awakened in every person.
                 </p>
+                </div>
               </div>
             </StaggerItem>
 
@@ -273,7 +291,7 @@ export default function AboutPage() {
                   </h3>
                   <p className="text-sm text-text-muted leading-relaxed">
                     Together with her husband, Reverend Oluwaseun anchors the pastoral vision of Grace for
-                    Greatness Christian Center, ministering with grace, care, and a heart to see every
+                    Greatness Christian Centre, ministering with grace, care, and a heart to see every
                     person discover their God-given purpose.
                   </p>
                 </div>

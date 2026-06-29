@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { FadeInUp } from '@/components/motion/FadeInUp'
 import { StaggerChildren, StaggerItem } from '@/components/motion/StaggerChildren'
 import { GoldShimmer } from '@/components/motion/GoldShimmer'
+import { SignatureHalo } from '@/components/motion/SignatureHalo'
 import { Badge } from '@/components/ui/Badge'
 import { Play, Clock, Search, MicVocal, Film } from 'lucide-react'
 import { prisma } from '@/lib/prisma'
@@ -58,6 +59,9 @@ export default async function SermonsPage({
       {/* Header */}
       <section className="section-padding-sm bg-brand-blue relative overflow-hidden">
         <div className="absolute inset-0 bg-pattern-dots opacity-30 pointer-events-none" />
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none opacity-60">
+          <SignatureHalo size={500} />
+        </div>
         <div className="container mx-auto px-4 max-w-7xl relative">
           <FadeInUp className="text-center">
             <span className="section-label mb-4 inline-flex justify-center">Sermon Library</span>
@@ -115,10 +119,15 @@ export default async function SermonsPage({
             </div>
           ) : (
             <StaggerChildren className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {sermons.map((sermon) => (
+              {sermons.map((sermon, i) => {
+                const accent = ['gold', 'teal', 'magenta'][i % 3]
+                const seriesAccent =
+                  accent === 'teal' ? 'text-brand-teal-light' : accent === 'magenta' ? 'text-brand-magenta-light' : 'text-brand-gold'
+                return (
                 <StaggerItem key={sermon.id}>
                   <Link href={`/sermons/${sermon.slug}`} className="block group">
-                    <div className="glass-card rounded-2xl overflow-hidden glass-card-interactive">
+                    <div className="glass-card rounded-2xl overflow-hidden glass-card-interactive relative">
+                      {i === 0 && <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-regal z-10" />}
                       {/* Thumbnail */}
                       <div className="relative aspect-video overflow-hidden bg-white/5">
                         {sermon.thumbnailUrl ? (
@@ -161,7 +170,7 @@ export default async function SermonsPage({
                       {/* Content */}
                       <div className="p-5">
                         {sermon.series && (
-                          <div className="text-xs text-brand-gold font-medium mb-2">{sermon.series.title}</div>
+                          <div className={`text-xs font-medium mb-2 ${seriesAccent}`}>{sermon.series.title}</div>
                         )}
                         <h3 className="font-display font-semibold text-white text-base mb-2 group-hover:text-brand-gold transition-colors line-clamp-2">
                           {sermon.title}
@@ -179,7 +188,8 @@ export default async function SermonsPage({
                     </div>
                   </Link>
                 </StaggerItem>
-              ))}
+                )
+              })}
             </StaggerChildren>
           )}
 

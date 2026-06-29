@@ -48,6 +48,13 @@ const contactDetails = [
   },
 ]
 
+const contactAccents = [
+  { chip: 'bg-brand-gold/10 border-brand-gold/25', icon: 'text-brand-gold' },
+  { chip: 'bg-brand-teal/10 border-brand-teal/25', icon: 'text-brand-teal-light' },
+  { chip: 'bg-brand-gold/10 border-brand-gold/25', icon: 'text-brand-gold' },
+  { chip: 'bg-brand-magenta/10 border-brand-magenta/25', icon: 'text-brand-magenta-light' },
+]
+
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false)
 
@@ -103,17 +110,20 @@ export default function ContactPage() {
             <div className="lg:col-span-2 space-y-6">
               <FadeInUp>
                 <h2 className="font-display font-bold text-white text-2xl mb-6">Contact Information</h2>
-                {contactDetails.map((d) => (
-                  <div key={d.label} className="glass-card rounded-2xl p-5 flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-brand-gold/10 border border-brand-gold/25 flex items-center justify-center flex-shrink-0">
-                      <d.icon className="h-5 w-5 text-brand-gold" />
+                {contactDetails.map((d, i) => {
+                  const accent = contactAccents[i % contactAccents.length]
+                  return (
+                    <div key={d.label} className="glass-card rounded-2xl p-5 flex items-start gap-4">
+                      <div className={`w-10 h-10 rounded-xl border flex items-center justify-center flex-shrink-0 ${accent.chip}`}>
+                        <d.icon className={`h-5 w-5 ${accent.icon}`} />
+                      </div>
+                      <div>
+                        <div className="text-xs text-text-muted mb-0.5">{d.label}</div>
+                        <div className="text-sm text-white">{d.value}</div>
+                      </div>
                     </div>
-                    <div>
-                      <div className="text-xs text-text-muted mb-0.5">{d.label}</div>
-                      <div className="text-sm text-white">{d.value}</div>
-                    </div>
-                  </div>
-                ))}
+                  )
+                })}
               </FadeInUp>
 
               <FadeInUp delay={0.2}>
@@ -159,7 +169,9 @@ export default function ContactPage() {
                     </button>
                   </div>
                 ) : (
-                  <form onSubmit={handleSubmit(onSubmit)} className="glass-card rounded-3xl p-8 space-y-5">
+                  <form onSubmit={handleSubmit(onSubmit)} className="glass-card rounded-3xl overflow-hidden p-0 space-y-0">
+                    <div className="h-[3px] bg-gradient-regal" />
+                    <div className="p-8 space-y-5">
                     <h2 className="font-display font-bold text-white text-2xl">Send Us a Message</h2>
 
                     <div className="grid sm:grid-cols-2 gap-4">
@@ -225,6 +237,7 @@ export default function ContactPage() {
                     <Button type="submit" variant="gold" size="lg" loading={isSubmitting} className="w-full">
                       {isSubmitting ? 'Sending...' : 'Send Message'}
                     </Button>
+                    </div>
                   </form>
                 )}
               </FadeInUp>

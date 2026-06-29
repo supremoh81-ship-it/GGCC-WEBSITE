@@ -27,7 +27,7 @@ export function EventConfirmation({
     <Html>
       <Head />
       <Preview>You're registered: {eventTitle}</Preview>
-      <Body style={{ backgroundColor: '#0A1628', fontFamily: 'Inter, sans-serif', margin: 0 }}>
+      <Body style={{ backgroundColor: '#100B16', fontFamily: 'Inter, sans-serif', margin: 0 }}>
         <Container style={{ maxWidth: 580, margin: '0 auto', padding: '40px 20px' }}>
           {/* Header */}
           <Section style={{ textAlign: 'center', marginBottom: 32 }}>
@@ -37,7 +37,7 @@ export function EventConfirmation({
           </Section>
 
           {/* Card */}
-          <Section style={{ backgroundColor: '#0F2347', borderRadius: 16, padding: '40px 36px', border: '1px solid rgba(201,168,76,0.2)' }}>
+          <Section style={{ backgroundColor: '#1C1422', borderRadius: 16, padding: '40px 36px', border: '1px solid rgba(201,168,76,0.2)' }}>
             {/* Icon */}
             <Section style={{ textAlign: 'center', marginBottom: 24 }}>
               <Text style={{ fontSize: 40, margin: 0 }}>🎉</Text>
@@ -93,7 +93,7 @@ export function EventConfirmation({
             <Section style={{ textAlign: 'center' }}>
               <Link
                 href={`${process.env.NEXT_PUBLIC_APP_URL || 'https://ggcc.church'}/events`}
-                style={{ display: 'inline-block', backgroundColor: '#C9A84C', color: '#0A1628', fontWeight: 700, fontSize: 14, borderRadius: 10, padding: '14px 32px', textDecoration: 'none' }}
+                style={{ display: 'inline-block', backgroundColor: '#C9A84C', color: '#100B16', fontWeight: 700, fontSize: 14, borderRadius: 10, padding: '14px 32px', textDecoration: 'none' }}
               >
                 View Event Details
               </Link>

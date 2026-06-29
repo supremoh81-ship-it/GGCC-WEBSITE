@@ -37,7 +37,8 @@ const socials = [
 
 export function SiteFooter() {
   return (
-    <footer className="bg-brand-navy border-t border-white/8">
+    <footer className="bg-brand-navy relative">
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-regal opacity-50" />
       {/* Newsletter bar */}
       <div className="border-b border-white/8">
         <div className="container mx-auto px-4 max-w-7xl py-10 flex flex-col md:flex-row items-center gap-6 justify-between">

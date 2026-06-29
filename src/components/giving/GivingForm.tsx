@@ -86,6 +86,7 @@ export function GivingForm() {
 
   return (
     <div className="glass-card rounded-3xl overflow-hidden" style={{ border: '1px solid rgba(201, 168, 76, 0.3)' }}>
+      <div className="h-[3px] bg-gradient-regal" />
       {/* Tabs */}
       <div className="flex border-b border-white/10">
         {(['ONE_TIME', 'MONTHLY'] as const).map((tab) => (

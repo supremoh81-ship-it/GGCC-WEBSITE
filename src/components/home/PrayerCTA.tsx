@@ -16,8 +16,8 @@ export function PrayerCTA() {
       title: 'Submit a Prayer',
       desc: 'Share your request with our prayer community or privately with our intercessors.',
       href: '/prayer',
-      color: 'from-red-500/20 to-red-500/5',
-      iconBg: 'bg-red-500/15',
+      color: 'from-brand-magenta/20 to-brand-magenta/5',
+      iconBg: 'bg-brand-magenta/15',
     },
     {
       icon: HandHeart,
@@ -32,8 +32,8 @@ export function PrayerCTA() {
       title: 'Prayer Sessions',
       desc: 'Join live online prayer sessions hosted by our pastoral team every week.',
       href: '/prayer',
-      color: 'from-blue-500/20 to-blue-500/5',
-      iconBg: 'bg-blue-500/15',
+      color: 'from-brand-teal/20 to-brand-teal/5',
+      iconBg: 'bg-brand-teal/15',
     },
     {
       icon: Shield,

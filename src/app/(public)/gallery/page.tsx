@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { FadeInUp } from '@/components/motion/FadeInUp'
 import { GoldShimmer } from '@/components/motion/GoldShimmer'
+import { SignatureHalo } from '@/components/motion/SignatureHalo'
 import { GalleryGrid } from '@/components/gallery/GalleryGrid'
 import { GALLERY_CATEGORIES, getCategory } from '@/lib/data/gallery-categories'
 import { prisma } from '@/lib/prisma'
@@ -57,6 +58,9 @@ export default async function GalleryPage({
       {/* Hero */}
       <section className="section-padding-sm bg-brand-blue relative overflow-hidden">
         <div className="absolute inset-0 bg-pattern-dots opacity-30 pointer-events-none" />
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none opacity-60">
+          <SignatureHalo size={480} />
+        </div>
         <div className="container mx-auto px-4 max-w-7xl relative">
           <FadeInUp className="text-center">
             <span className="section-label mb-4 inline-flex justify-center">Gallery</span>
@@ -73,12 +77,13 @@ export default async function GalleryPage({
 
       {/* Recently Added */}
       {recentPhotos.length > 0 && (
-        <section className="section-padding-sm bg-brand-navy border-b border-white/8">
+        <section className="section-padding-sm bg-brand-navy border-b border-white/8 relative">
+          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-regal" />
           <div className="container mx-auto px-4 max-w-7xl">
             <FadeInUp className="flex items-center gap-2.5 mb-6">
               <span className="relative flex h-2.5 w-2.5">
-                <span className="absolute inline-flex h-full w-full rounded-full bg-brand-gold opacity-75 animate-ping" />
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-brand-gold" />
+                <span className="absolute inline-flex h-full w-full rounded-full bg-brand-teal opacity-75 animate-ping" />
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-brand-teal" />
               </span>
               <h2 className="font-display font-bold text-white text-lg">Recently Added</h2>
             </FadeInUp>

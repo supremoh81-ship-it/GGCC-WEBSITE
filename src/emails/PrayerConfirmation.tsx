@@ -13,7 +13,7 @@ export function PrayerConfirmation({ firstName, prayerTitle, isAnonymous }: Prop
     <Html>
       <Head />
       <Preview>Your prayer request has been received</Preview>
-      <Body style={{ backgroundColor: '#0A1628', fontFamily: 'Inter, sans-serif', margin: 0 }}>
+      <Body style={{ backgroundColor: '#100B16', fontFamily: 'Inter, sans-serif', margin: 0 }}>
         <Container style={{ maxWidth: 580, margin: '0 auto', padding: '40px 20px' }}>
           <Section style={{ textAlign: 'center', marginBottom: 32 }}>
             <Text style={{ color: '#C9A84C', fontSize: 13, fontWeight: 600, letterSpacing: 4, textTransform: 'uppercase', margin: 0 }}>
@@ -21,7 +21,7 @@ export function PrayerConfirmation({ firstName, prayerTitle, isAnonymous }: Prop
             </Text>
           </Section>
 
-          <Section style={{ backgroundColor: '#0F2347', borderRadius: 16, padding: '40px 36px', border: '1px solid rgba(201,168,76,0.2)' }}>
+          <Section style={{ backgroundColor: '#1C1422', borderRadius: 16, padding: '40px 36px', border: '1px solid rgba(201,168,76,0.2)' }}>
             <Section style={{ textAlign: 'center', marginBottom: 24 }}>
               <Text style={{ fontSize: 40, margin: 0 }}>🙏</Text>
             </Section>

@@ -95,20 +95,20 @@ export default function WelcomeEmail({
 }
 
 const main: React.CSSProperties = {
-  backgroundColor: '#0A1628',
+  backgroundColor: '#100B16',
   fontFamily: "'Inter', -apple-system, sans-serif",
 }
 
 const container: React.CSSProperties = {
   maxWidth: '560px',
   margin: '0 auto',
-  backgroundColor: '#0F2347',
+  backgroundColor: '#1C1422',
   borderRadius: '16px',
   overflow: 'hidden',
 }
 
 const header: React.CSSProperties = {
-  background: 'linear-gradient(135deg, #0A1628, #0F2347)',
+  background: 'linear-gradient(135deg, #100B16, #1C1422)',
   padding: '28px 40px',
   textAlign: 'center',
   borderBottom: '1px solid rgba(201, 168, 76, 0.2)',
@@ -141,7 +141,7 @@ const bodyText: React.CSSProperties = {
 
 const button: React.CSSProperties = {
   backgroundColor: '#C9A84C',
-  color: '#0A1628',
+  color: '#100B16',
   borderRadius: '10px',
   padding: '12px 32px',
   fontSize: '14px',

@@ -59,11 +59,11 @@ export function GalleryCategorySection({
           clientAllowedFormats: ['jpg', 'jpeg', 'png', 'webp', 'heic'],
           styles: {
             palette: {
-              window: '#0F2347',
+              window: '#1C1422',
               windowBorder: '#C9A84C',
               tabIcon: '#C9A84C',
               menuIcons: '#E8C97A',
-              textDark: '#0A1628',
+              textDark: '#100B16',
               textLight: '#FFFFFF',
               link: '#C9A84C',
               action: '#C9A84C',
@@ -71,7 +71,7 @@ export function GalleryCategorySection({
               error: '#E85D75',
               inProgress: '#C9A84C',
               complete: '#56B87D',
-              sourceBg: '#0A1628',
+              sourceBg: '#100B16',
             },
           },
         },

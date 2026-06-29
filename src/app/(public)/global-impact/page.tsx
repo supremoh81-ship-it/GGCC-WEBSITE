@@ -4,6 +4,7 @@ import { FadeInUp } from '@/components/motion/FadeInUp'
 import { StaggerChildren, StaggerItem } from '@/components/motion/StaggerChildren'
 import { GoldShimmer } from '@/components/motion/GoldShimmer'
 import { CountUp } from '@/components/motion/CountUp'
+import { SignatureHalo } from '@/components/motion/SignatureHalo'
 import { Globe, Heart, BookOpen, Home, Droplets, Users, ArrowRight } from 'lucide-react'
 
 export const metadata: Metadata = {
@@ -17,44 +18,50 @@ const regions = [
     countries: ['Nigeria', 'Ghana', 'Senegal', 'Sierra Leone', 'Ivory Coast'],
     partners: 47,
     initiatives: ['Church planting', 'Medical missions', 'Clean water wells'],
-    color: '#C9A84C',
+    accent: 'gold',
   },
   {
     name: 'East Africa',
     countries: ['Kenya', 'Uganda', 'Tanzania', 'Ethiopia', 'Rwanda'],
     partners: 31,
     initiatives: ['School sponsorships', 'Pastoral training', 'Food security'],
-    color: '#5B8DD9',
+    accent: 'teal',
   },
   {
     name: 'Latin America',
     countries: ['Brazil', 'Colombia', 'Peru', 'Mexico', 'Argentina'],
     partners: 22,
     initiatives: ['Youth discipleship', 'Street outreach', 'Women empowerment'],
-    color: '#56B87D',
+    accent: 'magenta',
   },
   {
     name: 'Asia Pacific',
     countries: ['India', 'Philippines', 'Indonesia', 'South Korea', 'Australia'],
     partners: 18,
     initiatives: ['Underground church support', 'Bible translation aid', 'Leadership schools'],
-    color: '#E85D75',
+    accent: 'gold',
   },
   {
     name: 'Middle East',
     countries: ['Lebanon', 'Jordan', 'Egypt', 'UAE', 'Turkey'],
     partners: 12,
     initiatives: ['Refugee ministry', 'House churches', 'Trauma healing'],
-    color: '#9B72CF',
+    accent: 'teal',
   },
   {
     name: 'Europe',
     countries: ['UK', 'Germany', 'France', 'Netherlands', 'Sweden'],
     partners: 15,
     initiatives: ['Diaspora ministry', 'Campus evangelism', 'Prayer networks'],
-    color: '#F0A500',
+    accent: 'gold',
   },
-]
+] as const
+
+const regionAccentClasses = {
+  gold: { border: 'border-brand-gold/25', pillBg: 'bg-brand-gold/20', pillText: 'text-brand-gold', dot: 'bg-brand-gold' },
+  teal: { border: 'border-brand-teal/25', pillBg: 'bg-brand-teal/20', pillText: 'text-brand-teal-light', dot: 'bg-brand-teal-light' },
+  magenta: { border: 'border-brand-magenta/25', pillBg: 'bg-brand-magenta/20', pillText: 'text-brand-magenta-light', dot: 'bg-brand-magenta-light' },
+}
 
 const initiatives = [
   {
@@ -101,16 +108,25 @@ const initiatives = [
   },
 ]
 
+const initiativeAccents = [
+  { chip: 'bg-brand-gold/10 border-brand-gold/25', icon: 'text-brand-gold', value: 'text-brand-gold' },
+  { chip: 'bg-brand-teal/10 border-brand-teal/25', icon: 'text-brand-teal-light', value: 'text-brand-teal-light' },
+  { chip: 'bg-brand-gold/10 border-brand-gold/25', icon: 'text-brand-gold', value: 'text-brand-gold' },
+  { chip: 'bg-brand-magenta/10 border-brand-magenta/25', icon: 'text-brand-magenta-light', value: 'text-brand-magenta-light' },
+  { chip: 'bg-brand-gold/10 border-brand-gold/25', icon: 'text-brand-gold', value: 'text-brand-gold' },
+  { chip: 'bg-brand-teal/10 border-brand-teal/25', icon: 'text-brand-teal-light', value: 'text-brand-teal-light' },
+]
+
 export default function GlobalImpactPage() {
   return (
     <div className="min-h-screen bg-brand-navy pt-24">
       {/* Hero */}
       <section className="section-padding bg-brand-blue relative overflow-hidden">
         <div className="absolute inset-0 bg-pattern-dots opacity-25 pointer-events-none" />
-        <div
-          className="absolute inset-0 pointer-events-none opacity-10"
-          style={{ background: 'radial-gradient(ellipse 80% 60% at 50% 50%, rgba(201, 168, 76, 0.4), transparent)' }}
-        />
+        <div className="absolute inset-0 bg-gradient-radial-gold opacity-40 pointer-events-none" />
+        <div className="absolute left-1/2 top-[2%] -translate-x-1/2 pointer-events-none opacity-50">
+          <SignatureHalo size={520} />
+        </div>
         <div className="container mx-auto px-4 max-w-7xl relative text-center">
           <FadeInUp>
             <Globe className="h-12 w-12 text-brand-gold mx-auto mb-5" />
@@ -128,13 +144,13 @@ export default function GlobalImpactPage() {
           <FadeInUp delay={0.3}>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto">
               {[
-                { value: 120, suffix: '+', label: 'Nations Reached' },
-                { value: 145, suffix: '', label: 'Partner Churches' },
-                { value: 50000, suffix: '+', label: 'Lives Impacted' },
-                { value: 15, suffix: 'yrs', label: 'Years of Mission' },
+                { value: 120, suffix: '+', label: 'Nations Reached', color: 'text-brand-gold' },
+                { value: 145, suffix: '', label: 'Partner Churches', color: 'text-brand-teal-light' },
+                { value: 50000, suffix: '+', label: 'Lives Impacted', color: 'text-brand-magenta-light' },
+                { value: 15, suffix: 'yrs', label: 'Years of Mission', color: 'text-brand-gold' },
               ].map((s) => (
                 <div key={s.label} className="glass-card rounded-2xl p-5">
-                  <div className="font-display font-bold text-3xl text-brand-gold">
+                  <div className={`font-display font-bold text-3xl ${s.color}`}>
                     <CountUp end={s.value} suffix={s.suffix} />
                   </div>
                   <div className="text-xs text-text-muted mt-1">{s.label}</div>
@@ -156,25 +172,28 @@ export default function GlobalImpactPage() {
           </FadeInUp>
 
           <StaggerChildren className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {initiatives.map((item) => (
-              <StaggerItem key={item.title}>
-                <div className="glass-card rounded-2xl p-7 h-full flex flex-col gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-brand-gold/10 border border-brand-gold/25 flex items-center justify-center">
-                    <item.icon className="h-6 w-6 text-brand-gold" />
-                  </div>
-                  <div>
-                    <h3 className="font-display font-bold text-white text-lg mb-1">{item.title}</h3>
-                    <p className="text-sm text-text-muted leading-relaxed">{item.description}</p>
-                  </div>
-                  <div className="pt-4 border-t border-white/8 mt-auto">
-                    <div className="font-display font-bold text-2xl text-brand-gold">
-                      <CountUp end={item.stat} />
+            {initiatives.map((item, i) => {
+              const accent = initiativeAccents[i % initiativeAccents.length]
+              return (
+                <StaggerItem key={item.title}>
+                  <div className="glass-card rounded-2xl p-7 h-full flex flex-col gap-4">
+                    <div className={`w-12 h-12 rounded-xl border flex items-center justify-center ${accent.chip}`}>
+                      <item.icon className={`h-6 w-6 ${accent.icon}`} />
                     </div>
-                    <div className="text-xs text-text-muted">{item.statLabel}</div>
+                    <div>
+                      <h3 className="font-display font-bold text-white text-lg mb-1">{item.title}</h3>
+                      <p className="text-sm text-text-muted leading-relaxed">{item.description}</p>
+                    </div>
+                    <div className="pt-4 border-t border-white/8 mt-auto">
+                      <div className={`font-display font-bold text-2xl ${accent.value}`}>
+                        <CountUp end={item.stat} />
+                      </div>
+                      <div className="text-xs text-text-muted">{item.statLabel}</div>
+                    </div>
                   </div>
-                </div>
-              </StaggerItem>
-            ))}
+                </StaggerItem>
+              )
+            })}
           </StaggerChildren>
         </div>
       </section>
@@ -190,39 +209,36 @@ export default function GlobalImpactPage() {
           </FadeInUp>
 
           <StaggerChildren className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {regions.map((region) => (
-              <StaggerItem key={region.name}>
-                <div
-                  className="glass-card rounded-2xl p-6 h-full"
-                  style={{ borderColor: `${region.color}25` }}
-                >
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-display font-bold text-white text-lg">{region.name}</h3>
-                    <span
-                      className="text-xs font-semibold px-3 py-1 rounded-full"
-                      style={{ background: `${region.color}20`, color: region.color }}
-                    >
-                      {region.partners} partners
-                    </span>
-                  </div>
-                  <div className="flex flex-wrap gap-1.5 mb-4">
-                    {region.countries.map((c) => (
-                      <span key={c} className="text-xs text-text-muted bg-white/5 px-2.5 py-1 rounded-full">
-                        {c}
+            {regions.map((region) => {
+              const accent = regionAccentClasses[region.accent]
+              return (
+                <StaggerItem key={region.name}>
+                  <div className={`glass-card rounded-2xl p-6 h-full border ${accent.border}`}>
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="font-display font-bold text-white text-lg">{region.name}</h3>
+                      <span className={`text-xs font-semibold px-3 py-1 rounded-full ${accent.pillBg} ${accent.pillText}`}>
+                        {region.partners} partners
                       </span>
-                    ))}
+                    </div>
+                    <div className="flex flex-wrap gap-1.5 mb-4">
+                      {region.countries.map((c) => (
+                        <span key={c} className="text-xs text-text-muted bg-white/5 px-2.5 py-1 rounded-full">
+                          {c}
+                        </span>
+                      ))}
+                    </div>
+                    <ul className="space-y-1.5">
+                      {region.initiatives.map((i) => (
+                        <li key={i} className="flex items-center gap-2 text-sm text-text-muted">
+                          <div className={`w-1.5 h-1.5 rounded-full ${accent.dot}`} />
+                          {i}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                  <ul className="space-y-1.5">
-                    {region.initiatives.map((i) => (
-                      <li key={i} className="flex items-center gap-2 text-sm text-text-muted">
-                        <div className="w-1.5 h-1.5 rounded-full" style={{ background: region.color }} />
-                        {i}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </StaggerItem>
-            ))}
+                </StaggerItem>
+              )
+            })}
           </StaggerChildren>
         </div>
       </section>

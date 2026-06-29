@@ -15,7 +15,7 @@ import { GalleryStrip } from '@/components/home/GalleryStrip'
 import { MembershipCTA } from '@/components/home/MembershipCTA'
 
 export const metadata: Metadata = {
-  title: 'GGCC | Greater Grace Christian Center',
+  title: 'Grace for Greatness Christian Centre (GGCC)',
   description:
     'A global church community rooted in faith, serving the world with love, purpose, and the transforming power of the Gospel. Watch sermons, join prayer, give, and connect.',
 }

@@ -78,10 +78,11 @@ export function SiteHeader() {
         className={cn(
           'fixed top-0 left-0 right-0 z-[200] transition-all duration-500',
           scrolled
-            ? 'bg-brand-navy/95 backdrop-blur-xl border-b border-white/8 py-3'
+            ? 'bg-brand-navy/95 backdrop-blur-xl py-3'
             : 'bg-transparent py-5'
         )}
       >
+        {scrolled && <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-regal opacity-40" />}
         <div className="container mx-auto px-4 max-w-7xl flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">

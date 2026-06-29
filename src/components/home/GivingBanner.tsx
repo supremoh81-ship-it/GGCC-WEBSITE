@@ -27,14 +27,17 @@ export function GivingBanner() {
           <div
             className="rounded-3xl overflow-hidden relative"
             style={{
-              background: 'linear-gradient(135deg, rgba(15, 35, 71, 0.9) 0%, rgba(26, 58, 107, 0.9) 100%)',
+              background: 'linear-gradient(135deg, rgba(28, 20, 34, 0.9) 0%, rgba(42, 31, 51, 0.9) 100%)',
               border: '1px solid rgba(201, 168, 76, 0.3)',
               boxShadow: '0 0 80px rgba(201, 168, 76, 0.1)',
             }}
           >
+            {/* Regal top accent line */}
+            <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-regal" />
+
             {/* Decorative corner accent */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-brand-gold/5 rounded-full blur-2xl" />
-            <div className="absolute bottom-0 left-0 w-48 h-48 bg-brand-gold/5 rounded-full blur-2xl" />
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-brand-magenta/5 rounded-full blur-2xl" />
 
             <div className="relative p-8 md:p-12">
               <div className="grid lg:grid-cols-2 gap-10 items-center">

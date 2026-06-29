@@ -10,7 +10,17 @@ interface Particle {
   radius: number
   opacity: number
   opacityDelta: number
+  color: string
 }
+
+// Gold-dominant with occasional teal/magenta motes, echoing the logo's swirl
+const PARTICLE_COLORS = [
+  '201, 168, 76',
+  '201, 168, 76',
+  '201, 168, 76',
+  '31, 168, 160',
+  '194, 58, 130',
+]
 
 export function AmbientParticles({ count = 55 }: { count?: number }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -41,6 +51,7 @@ export function AmbientParticles({ count = 55 }: { count?: number }) {
           radius: Math.random() * 2 + 0.5,
           opacity: Math.random() * 0.5 + 0.1,
           opacityDelta: (Math.random() - 0.5) * 0.004,
+          color: PARTICLE_COLORS[Math.floor(Math.random() * PARTICLE_COLORS.length)],
         })
       }
     }
@@ -77,7 +88,7 @@ export function AmbientParticles({ count = 55 }: { count?: number }) {
 
         ctx.beginPath()
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2)
-        ctx.fillStyle = `rgba(201, 168, 76, ${p.opacity})`
+        ctx.fillStyle = `rgba(${p.color}, ${p.opacity})`
         ctx.fill()
       })
 

@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { FadeInUp } from '@/components/motion/FadeInUp'
 import { StaggerChildren, StaggerItem } from '@/components/motion/StaggerChildren'
 import { GoldShimmer } from '@/components/motion/GoldShimmer'
+import { SignatureHalo } from '@/components/motion/SignatureHalo'
 import { PrayerRequestForm } from '@/components/prayer/PrayerRequestForm'
 import { Heart, HandHeart, Shield, Users, Clock, Globe } from 'lucide-react'
 import Link from 'next/link'
@@ -42,6 +43,9 @@ export default function PrayerPage() {
       {/* Header */}
       <section className="section-padding-sm bg-brand-blue relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-radial-gold opacity-50 pointer-events-none" />
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none opacity-60">
+          <SignatureHalo size={520} />
+        </div>
         <div className="container mx-auto px-4 max-w-7xl relative">
           <FadeInUp className="text-center">
             <span className="section-label mb-4 inline-flex justify-center">Prayer Hub</span>
@@ -66,7 +70,8 @@ export default function PrayerPage() {
                 title: 'Submit a Request',
                 desc: 'Share your prayer need with our community. Choose to share publicly or privately.',
                 href: '#submit',
-                color: 'bg-red-500/15',
+                color: 'bg-brand-magenta/15',
+                text: 'text-brand-magenta-light',
               },
               {
                 icon: HandHeart,
@@ -74,13 +79,15 @@ export default function PrayerPage() {
                 desc: 'Join thousands interceding for community needs. Pray for others in real time.',
                 href: '/prayer/wall',
                 color: 'bg-brand-gold/15',
+                text: 'text-brand-gold',
               },
               {
                 icon: Shield,
                 title: 'Private Counseling',
                 desc: 'Connect confidentially with a trained minister for personal prayer support.',
                 href: '#submit',
-                color: 'bg-purple-500/15',
+                color: 'bg-brand-teal/15',
+                text: 'text-brand-teal-light',
               },
             ].map((opt) => (
               <StaggerItem key={opt.title}>
@@ -91,7 +98,7 @@ export default function PrayerPage() {
                     </div>
                     <h3 className="font-display font-bold text-white text-xl">{opt.title}</h3>
                     <p className="text-sm text-text-muted flex-1">{opt.desc}</p>
-                    <div className="text-sm font-semibold text-brand-gold">{opt.title === 'Prayer Wall' ? 'Visit Wall' : 'Get Started'} &rarr;</div>
+                    <div className={`text-sm font-semibold ${opt.text}`}>{opt.title === 'Prayer Wall' ? 'Visit Wall' : 'Get Started'} &rarr;</div>
                   </div>
                 </Link>
               </StaggerItem>
@@ -110,7 +117,9 @@ export default function PrayerPage() {
             </div>
 
             <div className="grid md:grid-cols-3 gap-5">
-              {sessions.map((s) => (
+              {sessions.map((s, i) => {
+                const iconAccent = ['text-brand-gold', 'text-brand-teal-light', 'text-brand-magenta-light'][i % 3]
+                return (
                 <div key={s.title} className="glass-card rounded-2xl p-6">
                   <div className="flex items-center gap-2 mb-4">
                     <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
@@ -120,15 +129,15 @@ export default function PrayerPage() {
                   <p className="text-sm text-text-muted mb-4">{s.description}</p>
                   <div className="space-y-2 text-xs text-text-muted">
                     <div className="flex items-center gap-2">
-                      <Users className="h-3.5 w-3.5 text-brand-gold" />
+                      <Users className={`h-3.5 w-3.5 ${iconAccent}`} />
                       Host: {s.host}
                     </div>
                     <div className="flex items-center gap-2">
-                      <Clock className="h-3.5 w-3.5 text-brand-gold" />
+                      <Clock className={`h-3.5 w-3.5 ${iconAccent}`} />
                       {s.schedule}
                     </div>
                     <div className="flex items-center gap-2">
-                      <Globe className="h-3.5 w-3.5 text-brand-gold" />
+                      <Globe className={`h-3.5 w-3.5 ${iconAccent}`} />
                       {s.platform}
                     </div>
                   </div>
@@ -136,7 +145,8 @@ export default function PrayerPage() {
                     Join Session
                   </button>
                 </div>
-              ))}
+                )
+              })}
             </div>
           </FadeInUp>
 
