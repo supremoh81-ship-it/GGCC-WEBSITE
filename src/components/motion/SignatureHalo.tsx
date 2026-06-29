@@ -65,16 +65,22 @@ export function SignatureHalo({ size = 560, className }: SignatureHaloProps) {
           }}
         />
 
-        {/* Dove — glides in once, then rests with a gentle float */}
+        {/* Dove — glides in above the ring, clear of the headline, then rests with a gentle float */}
         <motion.svg
           viewBox="0 0 64 64"
           className="absolute"
-          style={{ width: size * 0.16, height: size * 0.16, top: '14%', right: '18%' }}
-          initial={reduceMotion ? { opacity: 0.9 } : { opacity: 0, x: -40, y: 18, scale: 0.85 }}
+          style={{
+            width: size * 0.14,
+            height: size * 0.14,
+            top: '-9%',
+            right: '30%',
+            filter: 'drop-shadow(0 2px 10px rgba(16,11,22,0.55)) drop-shadow(0 0 14px rgba(232,201,122,0.35))',
+          }}
+          initial={reduceMotion ? { opacity: 0.92 } : { opacity: 0, x: -30, y: 14, scale: 0.85 }}
           animate={
             reduceMotion
-              ? { opacity: 0.9 }
-              : { opacity: 0.92, x: 0, y: [0, -6, 0], scale: 1 }
+              ? { opacity: 0.92 }
+              : { opacity: 0.95, x: 0, y: [0, -6, 0], scale: 1 }
           }
           transition={
             reduceMotion
@@ -88,16 +94,9 @@ export function SignatureHalo({ size = 560, className }: SignatureHaloProps) {
           }
         >
           <path
-            d="M32 10c2 6 8 10 16 9-5 4-7 8-7 13 6-2 11 0 15 5-7 1-12 4-15 9-5-7-12-10-20-10-9 0-17 4-21 11-2-7 1-14 7-19-5-1-9-4-11-9 6 1 11-1 14-6 2 5 6 8 11 8 1-5 4-9 11-11z"
-            fill="url(#doveGradient)"
-            opacity="0.95"
+            d="M32 14c1.5 5 5 8.5 11 9.5-3.5 2-5 5-5.5 8.5 4-1 7.5.5 10 4-5 .5-8.5 2.5-11 6-3.5-5-8.5-7.5-14.5-7.5-6.5 0-12.5 3-15.5 8-1.5-5 .5-10 5-13.5-3.5-1-6.5-3-8-6.5 4.5 1 8-.5 10.5-4 1.5 3.5 4.5 6 8 6 .5-3.5 3-6.5 10-10.5z"
+            fill="#FFFFFF"
           />
-          <defs>
-            <linearGradient id="doveGradient" x1="0" y1="0" x2="64" y2="64">
-              <stop offset="0%" stopColor="#FFFFFF" />
-              <stop offset="100%" stopColor="#E8C97A" />
-            </linearGradient>
-          </defs>
         </motion.svg>
       </div>
     </div>
