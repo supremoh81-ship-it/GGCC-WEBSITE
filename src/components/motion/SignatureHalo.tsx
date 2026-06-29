@@ -65,22 +65,22 @@ export function SignatureHalo({ size = 560, className }: SignatureHaloProps) {
           }}
         />
 
-        {/* Dove — glides in above the ring, clear of the headline, then rests with a gentle float */}
+        {/* Dove — glides in to perch just above the headline, then rests with a gentle float */}
         <motion.svg
           viewBox="0 0 64 64"
           className="absolute"
           style={{
-            width: size * 0.14,
-            height: size * 0.14,
-            top: '-9%',
-            right: '30%',
-            filter: 'drop-shadow(0 2px 10px rgba(16,11,22,0.55)) drop-shadow(0 0 14px rgba(232,201,122,0.35))',
+            width: size * 0.13,
+            height: size * 0.13,
+            top: '15%',
+            right: '32%',
+            filter: 'drop-shadow(0 2px 8px rgba(16,11,22,0.6)) drop-shadow(0 0 10px rgba(232,201,122,0.3))',
           }}
-          initial={reduceMotion ? { opacity: 0.92 } : { opacity: 0, x: -30, y: 14, scale: 0.85 }}
+          initial={reduceMotion ? { opacity: 0.92 } : { opacity: 0, x: -24, y: 10, scale: 0.85 }}
           animate={
             reduceMotion
               ? { opacity: 0.92 }
-              : { opacity: 0.95, x: 0, y: [0, -6, 0], scale: 1 }
+              : { opacity: 0.95, x: 0, y: [0, -4, 0], scale: 1 }
           }
           transition={
             reduceMotion
