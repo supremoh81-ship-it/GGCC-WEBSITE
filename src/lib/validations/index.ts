@@ -38,6 +38,7 @@ export const sermonSchema = z.object({
   slug: z.string().min(3).max(200).regex(/^[a-z0-9-]+$/),
   description: z.string().max(500).optional(),
   body: z.string().optional(),
+  scriptureRef: z.string().max(100).optional(),
   type: z.enum(['VIDEO', 'AUDIO', 'NOTES_ONLY']),
   status: z.enum(['DRAFT', 'PUBLISHED', 'ARCHIVED']),
   videoUrl: z.string().url().optional().or(z.literal('')),
@@ -46,8 +47,10 @@ export const sermonSchema = z.object({
   thumbnailUrl: z.string().url().optional().or(z.literal('')),
   speakerId: z.string().cuid().optional(),
   seriesId: z.string().cuid().optional(),
+  speakerName: z.string().max(150).optional().or(z.literal('')),
+  seriesTitle: z.string().max(150).optional().or(z.literal('')),
   isFeatured: z.boolean().default(false),
-  publishedAt: z.coerce.date().optional(),
+  publishedAt: z.preprocess((v) => (v === '' ? undefined : v), z.coerce.date().optional()),
 })
 
 export const eventSchema = z.object({

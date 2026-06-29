@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import NextImage from 'next/image'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils/cn'
 import {
@@ -82,9 +83,15 @@ export function AdminSidebar({ role }: { role: string }) {
     <div className="h-full flex flex-col bg-brand-blue border-r border-white/8 w-64">
       {/* Logo */}
       <div className="p-5 border-b border-white/8">
-        <Link href="/admin" className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-brand-gold/15 flex items-center justify-center">
-            <span className="font-display font-bold text-brand-gold text-sm">G</span>
+        <Link href="/admin" className="flex items-center gap-2">
+          <div className="relative w-9 h-9 shrink-0">
+            <NextImage
+              src="/images/logo.png"
+              alt="GGCC"
+              fill
+              className="object-contain drop-shadow-[0_0_6px_rgba(201,168,76,0.4)]"
+              sizes="36px"
+            />
           </div>
           <div>
             <div className="font-display font-bold text-white text-sm">GGCC Admin</div>

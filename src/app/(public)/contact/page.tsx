@@ -34,13 +34,17 @@ const departments = [
 ]
 
 const contactDetails = [
-  { icon: MapPin, label: 'Address', value: '1 Grace Boulevard, Suite 400, Houston, TX 77001' },
-  { icon: Phone, label: 'Phone', value: '+1 (713) 555-0180' },
-  { icon: Mail, label: 'Email', value: 'connect@ggcc.church' },
+  {
+    icon: MapPin,
+    label: 'Address',
+    value: 'No. 7, Covenant Avenue, Dele Yes Sir Area, Ofatedo, Osogbo, Osun State',
+  },
+  { icon: Phone, label: 'Phone', value: '+234 905 5732 6674' },
+  { icon: Mail, label: 'Email', value: 'Connectggcchurch@gmail.com' },
   {
     icon: Clock,
     label: 'Office Hours',
-    value: 'Monday to Friday, 9 AM to 5 PM CT',
+    value: 'Monday to Friday, 9 AM to 5 PM',
   },
 ]
 
@@ -117,20 +121,20 @@ export default function ContactPage() {
                   <h3 className="font-semibold text-white mb-3">Service Times</h3>
                   <ul className="space-y-2 text-sm text-text-muted">
                     <li className="flex justify-between">
-                      <span>Sunday First Service</span>
+                      <span>Sunday School Service</span>
                       <span className="text-brand-gold">8:00 AM</span>
                     </li>
                     <li className="flex justify-between">
-                      <span>Sunday Second Service</span>
-                      <span className="text-brand-gold">10:30 AM</span>
+                      <span>Sunday Main Service</span>
+                      <span className="text-brand-gold">10:00 AM</span>
                     </li>
                     <li className="flex justify-between">
-                      <span>Midweek Bible Study</span>
-                      <span className="text-brand-gold">Wed 7:00 PM</span>
+                      <span>Midweek Service (School of Purpose)</span>
+                      <span className="text-brand-gold">Thu 5:00 PM</span>
                     </li>
                     <li className="flex justify-between">
-                      <span>Prayer Meeting</span>
-                      <span className="text-brand-gold">Fri 6:00 AM</span>
+                      <span>Early Morning Prayer</span>
+                      <span className="text-brand-gold">Mon-Fri 6:30 AM</span>
                     </li>
                   </ul>
                 </div>

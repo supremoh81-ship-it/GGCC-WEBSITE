@@ -3,134 +3,117 @@ import Link from 'next/link'
 import { FadeInUp } from '@/components/motion/FadeInUp'
 import { StaggerChildren, StaggerItem } from '@/components/motion/StaggerChildren'
 import { GoldShimmer } from '@/components/motion/GoldShimmer'
-import { Users, Music, BookOpen, Heart, Globe, Baby, ChevronRight } from 'lucide-react'
+import { ChevronRight, ArrowLeft } from 'lucide-react'
+import { ALL_MINISTRIES } from '@/lib/data/ministries'
 
 export const metadata: Metadata = {
   title: 'Ministries',
-  description: 'Discover and join GGCC ministry teams. Find your place to serve and grow.',
+  description:
+    'Discover all 14 ministry units at Grace for Greatness Christian Centre. Find your place to serve, grow, and make a difference.',
 }
-
-const ministries = [
-  {
-    slug: 'worship',
-    name: 'Worship Ministry',
-    tagline: 'Leading hearts to encounter God',
-    description: 'Our worship team creates Spirit-filled environments where people encounter God. We welcome singers, musicians, and technical artists.',
-    icon: Music,
-    color: '#C9A84C',
-    memberCount: 84,
-    meetingSchedule: 'Wednesdays, 7 PM',
-  },
-  {
-    slug: 'youth',
-    name: 'Youth & Young Adults',
-    tagline: 'Shaping the next generation',
-    description: 'A vibrant community for ages 13-35, focused on discipleship, community, and equipping the next generation of leaders.',
-    icon: Users,
-    color: '#5B8DD9',
-    memberCount: 210,
-    meetingSchedule: 'Saturdays, 5 PM',
-  },
-  {
-    slug: 'bible-study',
-    name: 'Bible Study',
-    tagline: 'Rooted in the Word',
-    description: 'In-depth, transformative study of scripture in small group settings. We believe the Word of God changes lives.',
-    icon: BookOpen,
-    color: '#56B87D',
-    memberCount: 156,
-    meetingSchedule: 'Tuesdays, 6:30 PM',
-  },
-  {
-    slug: 'prayer-warriors',
-    name: 'Prayer Warriors',
-    tagline: 'Interceding for the world',
-    description: 'Dedicated intercessors who stand in the gap for the church, community, and nations through regular prayer.',
-    icon: Heart,
-    color: '#E85D75',
-    memberCount: 320,
-    meetingSchedule: 'Daily, 6 AM',
-  },
-  {
-    slug: 'missions',
-    name: 'Missions & Outreach',
-    tagline: 'Serving our city and nations',
-    description: 'We believe in tangible love. Our missions team runs local community programs and supports global church planting.',
-    icon: Globe,
-    color: '#9B72CF',
-    memberCount: 98,
-    meetingSchedule: 'Monthly, 3rd Sunday',
-  },
-  {
-    slug: 'childrens',
-    name: "Children's Ministry",
-    tagline: 'Nurturing faith from the start',
-    description: 'Safe, fun, and spiritually rich programs that introduce children to God and build lifelong foundations of faith.',
-    icon: Baby,
-    color: '#F0A500',
-    memberCount: 135,
-    meetingSchedule: 'Sundays, 9 AM',
-  },
-]
 
 export default function MinistriesPage() {
   return (
     <div className="min-h-screen bg-brand-navy pt-24">
+
+      {/* Hero */}
       <section className="section-padding-sm bg-brand-blue relative overflow-hidden">
         <div className="absolute inset-0 bg-pattern-dots opacity-30 pointer-events-none" />
         <div className="container mx-auto px-4 max-w-7xl relative">
           <FadeInUp className="text-center">
+            <Link
+              href="/#ministries"
+              className="inline-flex items-center gap-1.5 text-xs text-text-muted hover:text-brand-gold transition-colors mb-6"
+            >
+              <ArrowLeft className="h-3.5 w-3.5" />
+              Back to Home
+            </Link>
             <span className="section-label mb-4 inline-flex justify-center">Our Ministries</span>
             <h1 className="text-display-lg font-display text-white mb-4">
               Find Your <GoldShimmer>Place to Serve</GoldShimmer>
             </h1>
             <p className="text-body-lg text-text-muted max-w-xl mx-auto">
-              Every believer is gifted. Every gift is needed. Find the ministry where yours will flourish.
+              Every believer is gifted. Every gift is needed. Discover the {ALL_MINISTRIES.length} ministry
+              units where yours will flourish.
             </p>
           </FadeInUp>
         </div>
       </section>
 
+      {/* Full Grid */}
       <section className="section-padding">
         <div className="container mx-auto px-4 max-w-7xl">
           <StaggerChildren className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {ministries.map((ministry) => (
+            {ALL_MINISTRIES.map((ministry) => (
               <StaggerItem key={ministry.slug}>
-                <div className="glass-card rounded-2xl p-7 h-full flex flex-col gap-5">
-                  <div className="flex items-start justify-between">
-                    <div
-                      className="w-14 h-14 rounded-xl flex items-center justify-center"
-                      style={{ backgroundColor: `${ministry.color}20`, border: `1px solid ${ministry.color}35` }}
-                    >
-                      <ministry.icon className="h-7 w-7" style={{ color: ministry.color }} />
-                    </div>
-                    <span className="text-xs text-text-muted">{ministry.memberCount} members</span>
-                  </div>
-
-                  <div>
-                    <h2 className="font-display font-bold text-white text-xl mb-1">{ministry.name}</h2>
-                    <p className="text-sm font-medium" style={{ color: ministry.color }}>{ministry.tagline}</p>
-                  </div>
-
-                  <p className="text-sm text-text-muted leading-relaxed flex-1">{ministry.description}</p>
-
-                  <div className="pt-4 border-t border-white/8 flex items-center justify-between">
-                    <div className="text-xs text-text-muted">{ministry.meetingSchedule}</div>
-                    <Link
-                      href={`/ministries/${ministry.slug}`}
-                      className="flex items-center gap-1 text-sm font-semibold transition-colors hover:opacity-80"
+                <div
+                  className="glass-card rounded-2xl p-7 h-full flex flex-col group transition-all duration-300"
+                  style={{
+                    border: `1px solid ${ministry.color}20`,
+                  }}
+                >
+                  {/* Icon */}
+                  <div
+                    className="w-14 h-14 rounded-xl flex items-center justify-center mb-5 shrink-0"
+                    style={{
+                      backgroundColor: `${ministry.color}18`,
+                      border: `1px solid ${ministry.color}35`,
+                    }}
+                  >
+                    <ministry.icon
+                      className="h-7 w-7"
                       style={{ color: ministry.color }}
-                    >
-                      Join
-                      <ChevronRight className="h-4 w-4" />
-                    </Link>
+                    />
                   </div>
+
+                  {/* Name */}
+                  <h2 className="font-display font-bold text-white text-xl mb-3">
+                    {ministry.name}
+                  </h2>
+
+                  {/* Description */}
+                  <p className="text-sm text-text-muted leading-relaxed flex-1 mb-6">
+                    {ministry.description}
+                  </p>
+
+                  {/* Join button */}
+                  <Link
+                    href="#"
+                    className="inline-flex items-center gap-1.5 text-sm font-semibold rounded-full px-5 py-2.5 border transition-all duration-200 self-start hover:opacity-90 active:scale-95"
+                    style={{
+                      color: ministry.color,
+                      borderColor: `${ministry.color}40`,
+                      backgroundColor: `${ministry.color}10`,
+                    }}
+                  >
+                    Join This Unit
+                    <ChevronRight className="h-4 w-4" />
+                  </Link>
                 </div>
               </StaggerItem>
             ))}
           </StaggerChildren>
         </div>
       </section>
+
+      {/* CTA */}
+      <section className="section-padding-sm bg-brand-blue">
+        <div className="container mx-auto px-4 max-w-3xl text-center">
+          <FadeInUp>
+            <h2 className="text-display-sm font-display text-white mb-4">
+              Not Sure Where to <GoldShimmer>Start?</GoldShimmer>
+            </h2>
+            <p className="text-body text-text-muted mb-8">
+              Reach out to us and we will help you find the right ministry unit based on your gifts,
+              passion, and availability.
+            </p>
+            <Link href="/contact" className="btn-gold">
+              Get in Touch
+            </Link>
+          </FadeInUp>
+        </div>
+      </section>
+
     </div>
   )
 }

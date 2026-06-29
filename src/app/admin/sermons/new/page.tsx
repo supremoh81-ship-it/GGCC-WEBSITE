@@ -12,6 +12,8 @@ import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 import { sermonSchema, type SermonInput } from '@/lib/validations'
 import { toast } from 'sonner'
+import { VideoUploadButton } from '@/components/admin/VideoUploadButton'
+import { ThumbnailUploadButton } from '@/components/admin/ThumbnailUploadButton'
 
 export default function AdminNewSermonPage() {
   const router = useRouter()
@@ -113,14 +115,48 @@ export default function AdminNewSermonPage() {
             rows={3}
           />
 
+          <Input
+            label="Scripture Reference (optional)"
+            {...register('scriptureRef')}
+            error={errors.scriptureRef?.message}
+            placeholder="Matthew 17:20"
+          />
+
           <div className="grid sm:grid-cols-2 gap-4">
             <Input
-              label="Video URL"
-              type="url"
-              {...register('videoUrl')}
-              error={errors.videoUrl?.message}
-              placeholder="https://..."
+              label="Speaker Name (optional)"
+              {...register('speakerName')}
+              error={errors.speakerName?.message}
+              placeholder="Rev. Olumuyiwa Abraham"
             />
+            <Input
+              label="Series Title (optional)"
+              {...register('seriesTitle')}
+              error={errors.seriesTitle?.message}
+              placeholder="Walking in Grace"
+            />
+          </div>
+
+          <Input
+            label="Date Preached (optional)"
+            type="date"
+            {...register('publishedAt')}
+            error={errors.publishedAt?.message}
+          />
+
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="block text-sm font-medium text-white">Video URL</label>
+                <VideoUploadButton onUploaded={(url) => setValue('videoUrl', url)} />
+              </div>
+              <Input
+                type="url"
+                {...register('videoUrl')}
+                error={errors.videoUrl?.message}
+                placeholder="YouTube, Facebook, TikTok, Instagram, or direct file link"
+              />
+            </div>
             <Input
               label="Audio URL"
               type="url"
@@ -151,13 +187,18 @@ export default function AdminNewSermonPage() {
             </div>
           </div>
 
-          <Input
-            label="Thumbnail URL"
-            type="url"
-            {...register('thumbnailUrl')}
-            error={errors.thumbnailUrl?.message}
-            placeholder="https://..."
-          />
+          <div>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="block text-sm font-medium text-white">Thumbnail URL</label>
+              <ThumbnailUploadButton onUploaded={(url) => setValue('thumbnailUrl', url)} />
+            </div>
+            <Input
+              type="url"
+              {...register('thumbnailUrl')}
+              error={errors.thumbnailUrl?.message}
+              placeholder="https://... (optional — leave blank for a default background)"
+            />
+          </div>
 
           <div className="flex items-center gap-3 pt-2 border-t border-white/8">
             <Button type="submit" variant="gold" loading={saving}>

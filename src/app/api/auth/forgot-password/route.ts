@@ -5,7 +5,7 @@ import { Resend } from 'resend'
 import crypto from 'crypto'
 
 const schema = z.object({ email: z.string().email() })
-const resend = new Resend(process.env.RESEND_API_KEY)
+const resend = new Resend(process.env.RESEND_API_KEY || 're_placeholder_build_key')
 
 export async function POST(req: Request) {
   try {

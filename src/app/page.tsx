@@ -26,6 +26,7 @@ export default function HomePage() {
       <HeroSection />
       <PastorWelcome />
       <VisionMission />
+      <GalleryStrip />
       <LiveExperience />
       <FeaturedSermon />
       <LatestPodcast />
@@ -35,7 +36,6 @@ export default function HomePage() {
       <TestimonyCarousel />
       <GlobalImpact />
       <GivingBanner />
-      <GalleryStrip />
       <MembershipCTA />
     </>
   )

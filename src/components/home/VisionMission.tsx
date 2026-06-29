@@ -8,30 +8,30 @@ const pillars = [
   {
     icon: Eye,
     title: 'Our Vision',
-    body: 'To be a global light bearer, raising spiritually mature disciples who transform every sphere of society with the love and truth of Jesus Christ.',
+    body: 'We exist to see people saved, restored, discipled, equipped, and empowered to serve and to lead.',
   },
   {
     icon: Target,
     title: 'Our Mission',
-    body: 'To connect, equip, and deploy believers to fulfill their God-given purpose through Spirit-led worship, discipleship, community, and world outreach.',
+    body: 'To heal a shattered world through God\'s kind love and birthing greatness in people.',
   },
   {
     icon: Flame,
     title: 'Our Values',
-    body: 'Reverence for God. Radical love for people. Relentless pursuit of excellence. Responsibility to community. Resilience through faith.',
+    body: 'Bible-Centered Preaching and Teaching, A Grace Orientation for Life, Evangelism, The Poor and Disenfranchised Matter to God, Sustained Excellence and Quality, Strong Family Ties and Fellowship, Discipleship and Christian Education, Giving — Tithing, Offerings, and Stewardship of Time, Self, Possessions and Influence, The Ordinances — Baptism and Holy Communion.',
   },
   {
     icon: Globe,
     title: 'Global Reach',
-    body: 'From our local roots to nations across six continents, our presence, partnerships, and prayer networks continue to expand the Kingdom.',
+    body: 'From our local roots in Osogbo to our expanding presence across nations, Grace for Greatness Christian Center continues to extend God\'s kingdom through worship, prayer, discipleship, and purposeful service. Our vision includes planting churches locally and abroad, raising leaders of integrity, and establishing a Christian school to impact generations.',
   },
 ]
 
 const stats = [
-  { end: 50000, suffix: '+', label: 'Members Worldwide' },
-  { end: 120, suffix: '+', label: 'Nations Reached' },
-  { end: 1500, suffix: '+', label: 'Sermons Archived' },
-  { end: 15, suffix: 'yrs', label: 'Years of Ministry' },
+  { end: 10000, suffix: '+', label: 'Members Worldwide' },
+  { end: 6, suffix: '+', label: 'Nations Reached' },
+  { end: 780, suffix: '+', label: 'Sermons Archived' },
+  { end: 5, suffix: 'yrs', label: 'Years of Ministry' },
 ]
 
 export function VisionMission() {
@@ -48,9 +48,11 @@ export function VisionMission() {
             <GoldShimmer>Purpose</GoldShimmer>,{' '}
             guided by <GoldShimmer>Faith</GoldShimmer>
           </h2>
-          <p className="text-body-lg text-text-muted max-w-2xl mx-auto text-balance">
-            Everything we do flows from a clear sense of who we are, why we exist,
-            and where God is calling us to go.
+          <p className="text-body-lg text-text-muted max-w-3xl mx-auto text-balance">
+            Grace for Greatness Christian Center is built on the foundation of God&apos;s grace and purpose.
+            Our ministry emphasis is <span className="text-white font-semibold">RESTORATION</span> — to lead people who feel their lives have been shattered
+            back to God for total restoration by providing an atmosphere of grace, showing them God&apos;s kind of love,
+            and bringing out the greatness in them through teaching God&apos;s word and empowering them to become great leaders.
           </p>
         </FadeInUp>
 

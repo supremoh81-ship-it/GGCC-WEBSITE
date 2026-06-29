@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { auth } from '@/lib/auth'
 import { sermonSchema } from '@/lib/validations'
+import { resolveSpeakerId, resolveSeriesId } from '@/lib/utils/sermon-resolve'
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
@@ -81,11 +82,20 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 })
   }
 
+  const { speakerName, seriesTitle, speakerId: _speakerId, seriesId: _seriesId, ...rest } = parsed.data
+
+  const [speakerId, seriesId] = await Promise.all([
+    resolveSpeakerId(speakerName),
+    resolveSeriesId(seriesTitle),
+  ])
+
   const sermon = await prisma.sermon.create({
     data: {
-      ...parsed.data,
-      videoUrl: parsed.data.videoUrl || null,
-      audioUrl: parsed.data.audioUrl || null,
+      ...rest,
+      videoUrl: rest.videoUrl || null,
+      audioUrl: rest.audioUrl || null,
+      speakerId: speakerId ?? undefined,
+      seriesId: seriesId ?? undefined,
     },
   })
 

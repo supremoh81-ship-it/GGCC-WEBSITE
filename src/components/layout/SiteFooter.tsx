@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { GoldShimmer } from '@/components/motion/GoldShimmer'
 import { Mail, Phone, MapPin, Facebook, Youtube, Instagram, Twitter } from 'lucide-react'
 
@@ -64,13 +65,19 @@ export function SiteFooter() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-10">
           {/* Brand column */}
           <div className="lg:col-span-2">
-            <Link href="/" className="flex items-center gap-3 mb-5">
-              <div className="w-10 h-10 rounded-lg bg-brand-gold/10 border border-brand-gold/25 flex items-center justify-center">
-                <span className="font-display font-bold text-xl text-brand-gold">G</span>
+            <Link href="/" className="flex items-center gap-2 mb-5">
+              <div className="relative w-12 h-12 shrink-0">
+                <Image
+                  src="/images/logo.png"
+                  alt="Grace for Greatness Christian Centre"
+                  fill
+                  className="object-contain drop-shadow-[0_0_8px_rgba(201,168,76,0.3)]"
+                  sizes="48px"
+                />
               </div>
               <div>
-                <div className="font-display font-bold text-white text-lg leading-none">GGCC</div>
-                <div className="text-[10px] text-text-muted tracking-widest uppercase mt-0.5">Greater Grace Christian Center</div>
+                <div className="font-display font-bold text-white text-base leading-none">Grace for Greatness</div>
+                <div className="text-[9px] text-text-muted tracking-widest uppercase mt-0.5">Christian Centre</div>
               </div>
             </Link>
             <p className="text-text-muted text-sm leading-relaxed mb-6 max-w-xs">
@@ -116,17 +123,17 @@ export function SiteFooter() {
         {/* Contact info */}
         <div className="mt-12 pt-8 border-t border-white/8 flex flex-col md:flex-row gap-6 items-start md:items-center justify-between">
           <div className="flex flex-wrap gap-6">
-            <a href="mailto:info@ggcc.church" className="flex items-center gap-2 text-sm text-text-muted hover:text-white transition-colors">
+            <a href="mailto:Connectggcchurch@gmail.com" className="flex items-center gap-2 text-sm text-text-muted hover:text-white transition-colors">
               <Mail className="h-4 w-4 text-brand-gold" />
-              info@ggcc.church
+              Connectggcchurch@gmail.com
             </a>
-            <a href="tel:+1-000-000-0000" className="flex items-center gap-2 text-sm text-text-muted hover:text-white transition-colors">
+            <a href="tel:+23490557326674" className="flex items-center gap-2 text-sm text-text-muted hover:text-white transition-colors">
               <Phone className="h-4 w-4 text-brand-gold" />
-              +1 (000) 000-0000
+              +234 905 5732 6674
             </a>
             <span className="flex items-center gap-2 text-sm text-text-muted">
               <MapPin className="h-4 w-4 text-brand-gold" />
-              Global Presence
+              Ofatedo, Osogbo, Osun State
             </span>
           </div>
           <p className="text-xs text-text-muted">

@@ -11,8 +11,14 @@ export { cloudinary }
 
 export async function generateSignedUploadParams(folder: string) {
   const timestamp = Math.round(new Date().getTime() / 1000)
+  const uploadPreset = process.env.CLOUDINARY_UPLOAD_PRESET
+  // The Cloudinary Upload Widget appends source=uw to every signed upload request,
+  // so it must be included here or the widget's own signature check will fail.
+  const paramsToSign: Record<string, string | number> = { timestamp, folder, source: 'uw' }
+  if (uploadPreset) paramsToSign.upload_preset = uploadPreset
+
   const signature = cloudinary.utils.api_sign_request(
-    { timestamp, folder, upload_preset: process.env.CLOUDINARY_UPLOAD_PRESET },
+    paramsToSign,
     process.env.CLOUDINARY_API_SECRET!
   )
   return {
@@ -20,6 +26,7 @@ export async function generateSignedUploadParams(folder: string) {
     signature,
     cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
     apiKey: process.env.CLOUDINARY_API_KEY,
+    uploadPreset,
     folder,
   }
 }

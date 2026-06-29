@@ -33,9 +33,5 @@ export default auth((req) => {
 })
 
 export const config = {
-  matcher: [
-    '/member/:path*',
-    '/admin/:path*',
-    '/((?!_next/static|_next/image|favicon.ico|images|icons|fonts).*)',
-  ],
+  matcher: ['/member/:path*', '/admin/:path*'],
 }

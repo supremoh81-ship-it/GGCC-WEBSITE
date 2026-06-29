@@ -18,11 +18,20 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
         </div>
 
         <div className="relative">
-          <Link href="/" className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-brand-gold/20 border border-brand-gold/40 flex items-center justify-center">
-              <span className="text-brand-gold font-display font-bold text-lg">G</span>
+          <Link href="/" className="flex items-center gap-2">
+            <div className="relative w-11 h-11 shrink-0">
+              <Image
+                src="/images/logo.png"
+                alt="Grace for Greatness Christian Centre"
+                fill
+                className="object-contain drop-shadow-[0_0_10px_rgba(201,168,76,0.5)]"
+                sizes="44px"
+              />
             </div>
-            <span className="font-display font-bold text-white text-lg">GGCC</span>
+            <div>
+              <div className="font-display font-bold text-white text-base leading-none">Grace for Greatness</div>
+              <div className="text-[9px] text-white/50 tracking-widest uppercase mt-0.5">Christian Centre</div>
+            </div>
           </Link>
         </div>
 
@@ -36,9 +45,9 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
 
         <div className="relative grid grid-cols-3 gap-6">
           {[
-            { value: '50K+', label: 'Members' },
-            { value: '120+', label: 'Nations' },
-            { value: '15yr', label: 'Ministry' },
+            { value: '10K+', label: 'Members' },
+            { value: '6+', label: 'Nations' },
+            { value: '5yr', label: 'Ministry' },
           ].map((s) => (
             <div key={s.label}>
               <div className="text-2xl font-display font-bold text-brand-gold">{s.value}</div>
@@ -53,11 +62,20 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
         <div className="w-full max-w-md">
           {/* Mobile logo */}
           <div className="lg:hidden mb-8 flex justify-center">
-            <Link href="/" className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-brand-gold/20 border border-brand-gold/40 flex items-center justify-center">
-                <span className="text-brand-gold font-display font-bold text-lg">G</span>
+            <Link href="/" className="flex items-center gap-2">
+              <div className="relative w-11 h-11 shrink-0">
+                <Image
+                  src="/images/logo.png"
+                  alt="Grace for Greatness Christian Centre"
+                  fill
+                  className="object-contain"
+                  sizes="44px"
+                />
               </div>
-              <span className="font-display font-bold text-white text-lg">GGCC</span>
+              <div>
+                <div className="font-display font-bold text-white text-base leading-none">Grace for Greatness</div>
+                <div className="text-[9px] text-text-muted tracking-widest uppercase mt-0.5">Christian Centre</div>
+              </div>
             </Link>
           </div>
 

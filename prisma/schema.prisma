@@ -774,6 +774,7 @@ model GalleryAlbum {
 model GalleryPhoto {
   id           String   @id @default(cuid())
   albumId      String
+  publicId     String?  @unique
   url          String
   thumbnailUrl String?
   caption      String?

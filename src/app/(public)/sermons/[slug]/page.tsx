@@ -7,18 +7,10 @@ import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { ArrowLeft, Play, Headphones, FileText, Clock, Eye, BookmarkPlus, Share2 } from 'lucide-react'
 import { format } from 'date-fns'
+import { VideoEmbed } from '@/components/sermons/VideoEmbed'
 
 interface Props {
   params: { slug: string }
-}
-
-export async function generateStaticParams() {
-  const sermons = await prisma.sermon.findMany({
-    where: { status: 'PUBLISHED' },
-    select: { slug: true },
-    take: 100,
-  })
-  return sermons.map((s) => ({ slug: s.slug }))
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -145,12 +137,7 @@ export default async function SermonDetailPage({ params }: Props) {
             {sermon.videoUrl && (
               <FadeInUp>
                 <div className="aspect-video rounded-2xl overflow-hidden bg-black/40 border border-white/10">
-                  <video
-                    src={sermon.videoUrl}
-                    controls
-                    className="w-full h-full"
-                    preload="metadata"
-                  />
+                  <VideoEmbed url={sermon.videoUrl} title={sermon.title} className="w-full h-full" />
                 </div>
               </FadeInUp>
             )}

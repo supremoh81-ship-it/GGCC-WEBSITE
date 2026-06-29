@@ -2,12 +2,14 @@ import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { z } from 'zod'
+import { resolveSpeakerId, resolveSeriesId } from '@/lib/utils/sermon-resolve'
 
 const updateSchema = z.object({
   title: z.string().min(3).max(200).optional(),
   slug: z.string().min(3).regex(/^[a-z0-9-]+$/).optional(),
   description: z.string().max(500).optional(),
   body: z.string().optional(),
+  scriptureRef: z.string().max(100).optional().or(z.null()),
   type: z.enum(['VIDEO', 'AUDIO', 'NOTES_ONLY']).optional(),
   status: z.enum(['DRAFT', 'PUBLISHED', 'ARCHIVED']).optional(),
   videoUrl: z.string().url().optional().or(z.literal('')).or(z.null()),
@@ -16,8 +18,10 @@ const updateSchema = z.object({
   thumbnailUrl: z.string().url().optional().or(z.literal('')).or(z.null()),
   speakerId: z.string().cuid().optional().or(z.null()),
   seriesId: z.string().cuid().optional().or(z.null()),
+  speakerName: z.string().max(150).optional().or(z.literal('')),
+  seriesTitle: z.string().max(150).optional().or(z.literal('')),
   isFeatured: z.boolean().optional(),
-  publishedAt: z.coerce.date().optional().or(z.null()),
+  publishedAt: z.preprocess((v) => (v === '' ? undefined : v), z.coerce.date().optional().or(z.null())),
 })
 
 export async function GET(_req: Request, { params }: { params: { id: string } }) {
@@ -41,13 +45,20 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
 
   try {
     const body = await req.json()
-    const data = updateSchema.parse(body)
+    const { speakerName, seriesTitle, speakerId: _speakerId, seriesId: _seriesId, ...data } = updateSchema.parse(body)
+
+    const [speakerId, seriesId] = await Promise.all([
+      speakerName !== undefined ? resolveSpeakerId(speakerName) : undefined,
+      seriesTitle !== undefined ? resolveSeriesId(seriesTitle) : undefined,
+    ])
 
     const cleanData = {
       ...data,
       videoUrl: data.videoUrl || null,
       audioUrl: data.audioUrl || null,
       thumbnailUrl: data.thumbnailUrl || null,
+      ...(speakerId !== undefined ? { speakerId } : {}),
+      ...(seriesId !== undefined ? { seriesId } : {}),
     }
 
     const sermon = await prisma.sermon.update({

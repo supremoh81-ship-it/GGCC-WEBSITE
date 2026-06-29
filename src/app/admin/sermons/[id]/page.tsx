@@ -12,6 +12,8 @@ import { ArrowLeft, Trash2 } from 'lucide-react'
 import Link from 'next/link'
 import { sermonSchema, type SermonInput } from '@/lib/validations'
 import { toast } from 'sonner'
+import { VideoUploadButton } from '@/components/admin/VideoUploadButton'
+import { ThumbnailUploadButton } from '@/components/admin/ThumbnailUploadButton'
 
 export default function AdminEditSermonPage({ params }: { params: { id: string } }) {
   const router = useRouter()
@@ -23,6 +25,7 @@ export default function AdminEditSermonPage({ params }: { params: { id: string }
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm<SermonInput>({
     resolver: zodResolver(sermonSchema),
@@ -37,6 +40,9 @@ export default function AdminEditSermonPage({ params }: { params: { id: string }
             title: data.title,
             slug: data.slug,
             description: data.description ?? '',
+            scriptureRef: data.scriptureRef ?? '',
+            speakerName: data.speaker?.name ?? '',
+            seriesTitle: data.series?.title ?? '',
             type: data.type,
             status: data.status,
             videoUrl: data.videoUrl ?? '',
@@ -44,6 +50,7 @@ export default function AdminEditSermonPage({ params }: { params: { id: string }
             duration: data.duration ?? undefined,
             thumbnailUrl: data.thumbnailUrl ?? '',
             isFeatured: data.isFeatured,
+            publishedAt: data.publishedAt ? data.publishedAt.slice(0, 10) : '',
           })
         }
       })
@@ -146,13 +153,48 @@ export default function AdminEditSermonPage({ params }: { params: { id: string }
             rows={3}
           />
 
+          <Input
+            label="Scripture Reference (optional)"
+            {...register('scriptureRef')}
+            error={errors.scriptureRef?.message}
+            placeholder="Matthew 17:20"
+          />
+
           <div className="grid sm:grid-cols-2 gap-4">
             <Input
-              label="Video URL"
-              type="url"
-              {...register('videoUrl')}
-              error={errors.videoUrl?.message}
+              label="Speaker Name (optional)"
+              {...register('speakerName')}
+              error={errors.speakerName?.message}
+              placeholder="Rev. Olumuyiwa Abraham"
             />
+            <Input
+              label="Series Title (optional)"
+              {...register('seriesTitle')}
+              error={errors.seriesTitle?.message}
+              placeholder="Walking in Grace"
+            />
+          </div>
+
+          <Input
+            label="Date Preached (optional)"
+            type="date"
+            {...register('publishedAt')}
+            error={errors.publishedAt?.message}
+          />
+
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="block text-sm font-medium text-white">Video URL</label>
+                <VideoUploadButton onUploaded={(url) => setValue('videoUrl', url)} />
+              </div>
+              <Input
+                type="url"
+                {...register('videoUrl')}
+                error={errors.videoUrl?.message}
+                placeholder="YouTube, Facebook, TikTok, Instagram, or direct file link"
+              />
+            </div>
             <Input
               label="Audio URL"
               type="url"
@@ -181,12 +223,18 @@ export default function AdminEditSermonPage({ params }: { params: { id: string }
             </div>
           </div>
 
-          <Input
-            label="Thumbnail URL"
-            type="url"
-            {...register('thumbnailUrl')}
-            error={errors.thumbnailUrl?.message}
-          />
+          <div>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="block text-sm font-medium text-white">Thumbnail URL</label>
+              <ThumbnailUploadButton onUploaded={(url) => setValue('thumbnailUrl', url)} />
+            </div>
+            <Input
+              type="url"
+              {...register('thumbnailUrl')}
+              error={errors.thumbnailUrl?.message}
+              placeholder="https://... (optional — leave blank for a default background)"
+            />
+          </div>
 
           <div className="flex items-center gap-3">
             <input

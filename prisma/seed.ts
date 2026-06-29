@@ -1,5 +1,6 @@
 import { PrismaClient, Role } from '@prisma/client'
 import bcrypt from 'bcryptjs'
+import { GALLERY_CATEGORIES } from '../src/lib/data/gallery-categories'
 
 const prisma = new PrismaClient()
 
@@ -170,6 +171,23 @@ async function main() {
     },
   })
   console.log('Giving campaign created')
+
+  // Gallery categories (albums)
+  for (let i = 0; i < GALLERY_CATEGORIES.length; i++) {
+    const c = GALLERY_CATEGORIES[i]
+    await prisma.galleryAlbum.upsert({
+      where: { slug: c.slug },
+      update: {},
+      create: {
+        slug: c.slug,
+        title: c.title,
+        description: c.description,
+        isPublic: true,
+        sortOrder: i,
+      },
+    })
+  }
+  console.log('Gallery categories created')
 
   console.log('Seeding complete.')
 }

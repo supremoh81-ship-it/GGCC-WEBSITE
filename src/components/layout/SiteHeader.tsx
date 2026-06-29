@@ -84,17 +84,21 @@ export function SiteHeader() {
       >
         <div className="container mx-auto px-4 max-w-7xl flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="relative w-10 h-10">
-              <div className="absolute inset-0 bg-gradient-gold rounded-lg opacity-20 group-hover:opacity-30 transition-opacity" />
-              <div className="relative w-10 h-10 flex items-center justify-center">
-                <span className="font-display font-bold text-xl text-brand-gold">G</span>
-              </div>
+          <Link href="/" className="flex items-center gap-2 group">
+            <div className="relative w-11 h-11 shrink-0">
+              <Image
+                src="/images/logo.png"
+                alt="Grace for Greatness Christian Centre"
+                fill
+                className="object-contain drop-shadow-[0_0_8px_rgba(201,168,76,0.35)] transition-all group-hover:drop-shadow-[0_0_14px_rgba(201,168,76,0.55)]"
+                sizes="44px"
+                priority
+              />
             </div>
             <div className="hidden sm:flex flex-col">
-              <span className="font-display font-bold text-white text-lg leading-none">GGCC</span>
-              <span className="text-[10px] text-text-muted tracking-widest uppercase leading-none mt-0.5">
-                Greater Grace
+              <span className="font-display font-bold text-white text-base leading-none">Grace for Greatness</span>
+              <span className="text-[9px] text-text-muted tracking-widest uppercase leading-none mt-0.5">
+                Christian Centre
               </span>
             </div>
           </Link>

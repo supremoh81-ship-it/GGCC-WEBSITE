@@ -12,17 +12,37 @@ export function HeroSection() {
       {/* Cinematic background */}
       <div className="absolute inset-0 bg-gradient-hero" />
 
-      {/* Background image (swapped with video when available) */}
+      {/* Background image — anchored to bottom so text area stays clear */}
       <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-25"
+        className="absolute inset-0"
         style={{
           backgroundImage:
-            'url(https://images.unsplash.com/photo-1507692049790-de58290a4334?w=1920&q=80)',
+            'url(https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1920&q=80)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center 100%',
+          backgroundRepeat: 'no-repeat',
+          opacity: 0.22,
         }}
       />
 
-      {/* Gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-overlay" />
+      {/* Top-to-mid hard fade: keeps the entire text block on pure dark navy */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            'linear-gradient(to bottom, #0A1628 0%, #0A1628 55%, rgba(10,22,40,0.85) 75%, rgba(10,22,40,0.4) 100%)',
+        }}
+      />
+
+      {/* Subtle gold radial bloom behind the headline */}
+      <div
+        className="absolute left-1/2 -translate-x-1/2 w-[700px] h-[340px] rounded-full pointer-events-none"
+        style={{
+          top: '18%',
+          background: 'radial-gradient(ellipse at center, rgba(201,168,76,0.07) 0%, transparent 70%)',
+          filter: 'blur(32px)',
+        }}
+      />
 
       {/* Ambient particle canvas */}
       <AmbientParticles count={60} />
@@ -31,7 +51,7 @@ export function HeroSection() {
       <div className="absolute inset-0 bg-gradient-radial-gold" />
 
       {/* Content */}
-      <div className="relative z-10 container mx-auto px-4 max-w-5xl text-center pt-24">
+      <div className="relative z-10 container mx-auto px-4 max-w-5xl text-center pt-24" style={{ isolation: 'isolate' }}>
         {/* Eyebrow */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -50,11 +70,10 @@ export function HeroSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
           className="text-display-xl font-display text-white mb-6 text-balance"
+          style={{ textShadow: '0 2px 32px rgba(10,22,40,0.85)' }}
         >
-          Where{' '}
-          <GoldShimmer>Faith</GoldShimmer>{' '}
-          Moves<br className="hidden sm:block" /> the{' '}
-          <GoldShimmer>World</GoldShimmer>
+          Your Place to Grow<br className="hidden sm:block" /> into{' '}
+          <GoldShimmer>Greatness</GoldShimmer>
         </motion.h1>
 
         {/* Sub-headline */}
@@ -64,8 +83,9 @@ export function HeroSection() {
           transition={{ duration: 0.8, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}
           className="text-body-lg text-text-secondary max-w-2xl mx-auto mb-10 text-balance"
         >
-          A global community rooted in the love of Christ, empowering lives through
-          worship, prayer, and purposeful service to the world.
+          A restored community rooted in God&apos;s grace, where broken lives are healed,
+          purpose is discovered, and greatness is awakened through worship, discipleship,
+          and purposeful service.
         </motion.p>
 
         {/* CTA Group */}
@@ -100,9 +120,9 @@ export function HeroSection() {
           className="mt-16 grid grid-cols-3 gap-8 max-w-lg mx-auto"
         >
           {[
-            { value: '50K+', label: 'Global Members' },
-            { value: '120+', label: 'Nations Reached' },
-            { value: '15yr', label: 'Years of Ministry' },
+            { value: '5K+', label: 'Global Members' },
+            { value: '6+', label: 'Nations Reached' },
+            { value: '5yr', label: 'Years of Ministry' },
           ].map((stat) => (
             <div key={stat.label} className="text-center">
               <div className="font-display font-bold text-2xl text-brand-gold mb-1">

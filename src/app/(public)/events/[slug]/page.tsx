@@ -12,15 +12,6 @@ interface Props {
   params: { slug: string }
 }
 
-export async function generateStaticParams() {
-  const events = await prisma.event.findMany({
-    where: { status: 'PUBLISHED' },
-    select: { slug: true },
-    take: 100,
-  })
-  return events.map((e) => ({ slug: e.slug }))
-}
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const event = await prisma.event.findUnique({ where: { slug: params.slug } })
   if (!event) return { title: 'Event Not Found' }

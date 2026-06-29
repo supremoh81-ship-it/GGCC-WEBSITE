@@ -12,14 +12,6 @@ interface Props {
   params: { slug: string }
 }
 
-export async function generateStaticParams() {
-  const shows = await prisma.podcastShow.findMany({
-    where: { isActive: true },
-    select: { slug: true },
-  })
-  return shows.map((s) => ({ slug: s.slug }))
-}
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const show = await prisma.podcastShow.findUnique({ where: { slug: params.slug } })
   if (!show) return { title: 'Show Not Found' }

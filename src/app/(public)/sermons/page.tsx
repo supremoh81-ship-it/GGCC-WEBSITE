@@ -5,7 +5,11 @@ import { FadeInUp } from '@/components/motion/FadeInUp'
 import { StaggerChildren, StaggerItem } from '@/components/motion/StaggerChildren'
 import { GoldShimmer } from '@/components/motion/GoldShimmer'
 import { Badge } from '@/components/ui/Badge'
-import { Play, Clock, Download, Search, Filter, MicVocal } from 'lucide-react'
+import { Play, Clock, Search, MicVocal, Film } from 'lucide-react'
+import { prisma } from '@/lib/prisma'
+import { cn } from '@/lib/utils/cn'
+import { format } from 'date-fns'
+import type { SermonType } from '@prisma/client'
 
 export const metadata: Metadata = {
   title: 'Sermons',
@@ -13,76 +17,42 @@ export const metadata: Metadata = {
     'Browse our full library of sermons, series, and speaker messages. Video, audio, and downloadable notes available.',
 }
 
-const sermons = [
-  {
-    slug: 'the-faith-that-moves-mountains',
-    title: 'The Faith That Moves Mountains',
-    speaker: 'Dr. Emmanuel Grace',
-    series: 'Foundations of Faith',
-    date: 'June 8, 2025',
-    duration: '52:14',
-    type: 'VIDEO',
-    thumbnail: 'https://images.unsplash.com/photo-1545987796-200677ee1011?w=600&q=80',
-    scripture: 'Matthew 17:20',
-  },
-  {
-    slug: 'walking-in-divine-purpose',
-    title: 'Walking in Divine Purpose',
-    speaker: 'Pastor Sarah Mitchell',
-    series: 'Purpose Driven Life',
-    date: 'June 1, 2025',
-    duration: '44:30',
-    type: 'VIDEO',
-    thumbnail: 'https://images.unsplash.com/photo-1507692049790-de58290a4334?w=600&q=80',
-    scripture: 'Jeremiah 29:11',
-  },
-  {
-    slug: 'the-power-of-praise',
-    title: 'The Power of Praise in Battle',
-    speaker: 'Dr. Emmanuel Grace',
-    series: 'Warfare & Worship',
-    date: 'May 25, 2025',
-    duration: '58:47',
-    type: 'VIDEO',
-    thumbnail: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=600&q=80',
-    scripture: '2 Chronicles 20:22',
-  },
-  {
-    slug: 'grace-greater-than-sin',
-    title: 'Grace Greater Than All My Sin',
-    speaker: 'Bishop Thomas Adeyemi',
-    series: 'The Finished Work',
-    date: 'May 18, 2025',
-    duration: '61:22',
-    type: 'AUDIO',
-    thumbnail: 'https://images.unsplash.com/photo-1537119042441-93a37c6b7a68?w=600&q=80',
-    scripture: 'Romans 5:20',
-  },
-  {
-    slug: 'identity-in-christ',
-    title: 'Rooted in Identity: Who You Are in Christ',
-    speaker: 'Dr. Emmanuel Grace',
-    series: 'Foundations of Faith',
-    date: 'May 11, 2025',
-    duration: '49:55',
-    type: 'VIDEO',
-    thumbnail: 'https://images.unsplash.com/photo-1588196749597-9ff075ee6b5b?w=600&q=80',
-    scripture: 'Ephesians 1:3-14',
-  },
-  {
-    slug: 'holy-spirit-the-helper',
-    title: 'The Holy Spirit: Your Constant Helper',
-    speaker: 'Pastor Sarah Mitchell',
-    series: 'Spirit-led Living',
-    date: 'May 4, 2025',
-    duration: '53:18',
-    type: 'VIDEO',
-    thumbnail: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&q=80',
-    scripture: 'John 14:16-17',
-  },
+const FILTERS: { label: string; value: SermonType | 'ALL' }[] = [
+  { label: 'All', value: 'ALL' },
+  { label: 'Video', value: 'VIDEO' },
+  { label: 'Audio', value: 'AUDIO' },
+  { label: 'Notes', value: 'NOTES_ONLY' },
 ]
 
-export default function SermonsPage() {
+const PAGE_SIZE = 12
+
+function formatDuration(seconds: number) {
+  const m = Math.floor(seconds / 60)
+  const s = seconds % 60
+  return `${m}:${String(s).padStart(2, '0')}`
+}
+
+export default async function SermonsPage({
+  searchParams,
+}: {
+  searchParams: { q?: string; type?: string; take?: string }
+}) {
+  const activeType = FILTERS.some((f) => f.value === searchParams.type) ? searchParams.type : 'ALL'
+  const take = Math.min(Number(searchParams.take) || PAGE_SIZE, 96)
+
+  const sermons = await prisma.sermon.findMany({
+    where: {
+      status: 'PUBLISHED',
+      ...(activeType !== 'ALL' ? { type: activeType as SermonType } : {}),
+      ...(searchParams.q ? { title: { contains: searchParams.q, mode: 'insensitive' } } : {}),
+    },
+    include: { speaker: true, series: true },
+    orderBy: { publishedAt: 'desc' },
+    take,
+  })
+
+  const hasMore = sermons.length === take
+
   return (
     <div className="min-h-screen bg-brand-navy pt-24">
       {/* Header */}
@@ -105,22 +75,31 @@ export default function SermonsPage() {
       {/* Filter bar */}
       <div className="sticky top-16 z-10 bg-brand-navy/95 backdrop-blur-xl border-b border-white/8">
         <div className="container mx-auto px-4 max-w-7xl py-4 flex flex-col sm:flex-row gap-3 items-center">
-          <div className="relative flex-1 max-w-md">
+          <form action="/sermons" method="GET" className="relative flex-1 max-w-md w-full">
+            {activeType !== 'ALL' && <input type="hidden" name="type" value={activeType} />}
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
             <input
               type="search"
+              name="q"
+              defaultValue={searchParams.q ?? ''}
               placeholder="Search sermons..."
               className="w-full pl-10 pr-4 py-2.5 rounded-full border border-white/10 bg-white/5 text-sm text-white placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-brand-gold/40 focus:border-brand-gold/40 transition-colors"
             />
-          </div>
+          </form>
           <div className="flex gap-2">
-            {['All', 'Video', 'Audio', 'Notes'].map((f) => (
-              <button
-                key={f}
-                className="px-4 py-2 rounded-full text-sm text-text-muted hover:text-white hover:bg-white/10 transition-colors border border-transparent hover:border-white/15"
+            {FILTERS.map((f) => (
+              <Link
+                key={f.value}
+                href={f.value === 'ALL' ? '/sermons' : `/sermons?type=${f.value}`}
+                className={cn(
+                  'px-4 py-2 rounded-full text-sm transition-colors border',
+                  activeType === f.value
+                    ? 'bg-brand-gold text-brand-navy border-brand-gold'
+                    : 'text-text-muted border-transparent hover:text-white hover:bg-white/10 hover:border-white/15'
+                )}
               >
-                {f}
-              </button>
+                {f.label}
+              </Link>
             ))}
           </div>
         </div>
@@ -129,71 +108,96 @@ export default function SermonsPage() {
       {/* Sermons grid */}
       <section className="section-padding">
         <div className="container mx-auto px-4 max-w-7xl">
-          <StaggerChildren className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {sermons.map((sermon) => (
-              <StaggerItem key={sermon.slug}>
-                <Link href={`/sermons/${sermon.slug}`} className="block group">
-                  <div className="glass-card rounded-2xl overflow-hidden glass-card-interactive">
-                    {/* Thumbnail */}
-                    <div className="relative aspect-video overflow-hidden">
-                      <Image
-                        src={sermon.thumbnail}
-                        alt={sermon.title}
-                        fill
-                        className="object-cover transition-transform duration-700 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-brand-navy/30 group-hover:bg-brand-navy/10 transition-colors" />
+          {sermons.length === 0 ? (
+            <div className="text-center py-24 glass-card rounded-2xl">
+              <Film className="h-10 w-10 text-text-muted mx-auto mb-3 opacity-30" />
+              <p className="text-text-muted">No sermons found. Check back soon.</p>
+            </div>
+          ) : (
+            <StaggerChildren className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {sermons.map((sermon) => (
+                <StaggerItem key={sermon.id}>
+                  <Link href={`/sermons/${sermon.slug}`} className="block group">
+                    <div className="glass-card rounded-2xl overflow-hidden glass-card-interactive">
+                      {/* Thumbnail */}
+                      <div className="relative aspect-video overflow-hidden bg-white/5">
+                        {sermon.thumbnailUrl ? (
+                          <Image
+                            src={sermon.thumbnailUrl}
+                            alt={sermon.title}
+                            fill
+                            className="object-cover transition-transform duration-700 group-hover:scale-105"
+                          />
+                        ) : (
+                          <div className="absolute inset-0 bg-gradient-to-br from-brand-navy via-[#0d1e3a] to-brand-blue" />
+                        )}
+                        <div className="absolute inset-0 bg-brand-navy/30 group-hover:bg-brand-navy/10 transition-colors" />
 
-                      {/* Play button */}
-                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <div className="w-14 h-14 rounded-full bg-brand-gold/90 flex items-center justify-center shadow-gold">
-                          <Play className="h-5 w-5 text-brand-navy fill-current ml-0.5" />
+                        {/* Play button */}
+                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          <div className="w-14 h-14 rounded-full bg-brand-gold/90 flex items-center justify-center shadow-gold">
+                            <Play className="h-5 w-5 text-brand-navy fill-current ml-0.5" />
+                          </div>
+                        </div>
+
+                        {/* Duration */}
+                        {sermon.duration && (
+                          <div className="absolute bottom-2.5 right-2.5 glass-card rounded-full px-2.5 py-1 flex items-center gap-1">
+                            <Clock className="h-3 w-3 text-brand-gold" />
+                            <span className="text-xs text-white font-medium">
+                              {formatDuration(sermon.duration)}
+                            </span>
+                          </div>
+                        )}
+
+                        {/* Type badge */}
+                        <div className="absolute top-2.5 left-2.5">
+                          <Badge variant={sermon.type === 'AUDIO' ? 'blue' : 'gold'}>
+                            {sermon.type.replace('_', ' ')}
+                          </Badge>
                         </div>
                       </div>
 
-                      {/* Duration */}
-                      <div className="absolute bottom-2.5 right-2.5 glass-card rounded-full px-2.5 py-1 flex items-center gap-1">
-                        <Clock className="h-3 w-3 text-brand-gold" />
-                        <span className="text-xs text-white font-medium">{sermon.duration}</span>
-                      </div>
-
-                      {/* Type badge */}
-                      <div className="absolute top-2.5 left-2.5">
-                        <Badge variant={sermon.type === 'AUDIO' ? 'blue' : 'gold'}>
-                          {sermon.type}
-                        </Badge>
-                      </div>
-                    </div>
-
-                    {/* Content */}
-                    <div className="p-5">
-                      <div className="text-xs text-brand-gold font-medium mb-2">{sermon.series}</div>
-                      <h3 className="font-display font-semibold text-white text-base mb-2 group-hover:text-brand-gold transition-colors line-clamp-2">
-                        {sermon.title}
-                      </h3>
-                      <div className="flex items-center gap-1.5 text-xs text-text-muted mb-3">
-                        <MicVocal className="h-3 w-3" />
-                        {sermon.speaker} &bull; {sermon.date}
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs text-text-muted italic">{sermon.scripture}</span>
-                        <button className="text-text-muted hover:text-brand-gold transition-colors">
-                          <Download className="h-4 w-4" />
-                        </button>
+                      {/* Content */}
+                      <div className="p-5">
+                        {sermon.series && (
+                          <div className="text-xs text-brand-gold font-medium mb-2">{sermon.series.title}</div>
+                        )}
+                        <h3 className="font-display font-semibold text-white text-base mb-2 group-hover:text-brand-gold transition-colors line-clamp-2">
+                          {sermon.title}
+                        </h3>
+                        <div className="flex items-center gap-1.5 text-xs text-text-muted mb-3">
+                          <MicVocal className="h-3 w-3" />
+                          {sermon.speaker?.name}
+                          {sermon.speaker && sermon.publishedAt && ' • '}
+                          {sermon.publishedAt && format(new Date(sermon.publishedAt), 'MMM d, yyyy')}
+                        </div>
+                        {sermon.scriptureRef && (
+                          <span className="text-xs text-text-muted italic">{sermon.scriptureRef}</span>
+                        )}
                       </div>
                     </div>
-                  </div>
-                </Link>
-              </StaggerItem>
-            ))}
-          </StaggerChildren>
+                  </Link>
+                </StaggerItem>
+              ))}
+            </StaggerChildren>
+          )}
 
           {/* Load more */}
-          <FadeInUp className="text-center mt-12">
-            <button className="btn-outline-gold">
-              Load More Sermons
-            </button>
-          </FadeInUp>
+          {hasMore && (
+            <FadeInUp className="text-center mt-12">
+              <Link
+                href={`/sermons?${new URLSearchParams({
+                  ...(searchParams.q ? { q: searchParams.q } : {}),
+                  ...(activeType !== 'ALL' ? { type: activeType } : {}),
+                  take: String(take + PAGE_SIZE),
+                }).toString()}`}
+                className="btn-outline-gold"
+              >
+                Load More Sermons
+              </Link>
+            </FadeInUp>
+          )}
         </div>
       </section>
     </div>
