@@ -109,19 +109,22 @@ model User {
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
 
-  accounts           Account[]
-  sessions           Session[]
-  prayers            PrayerRequest[]
-  intercessions      PrayerIntercession[]
-  testimonies        Testimony[]
-  eventRegistrations EventRegistration[]
-  ministryMembers    MinistryMember[]
-  donations          Donation[]
-  subscriptions      GivingSubscription[]
-  comments           SermonComment[]
-  podcastProgress    PodcastProgress[]
-  sermonBookmarks    SermonBookmark[]
-  notifications      Notification[]
+  accounts              Account[]
+  sessions              Session[]
+  prayers               PrayerRequest[]
+  intercessions         PrayerIntercession[]
+  testimonies           Testimony[]
+  eventRegistrations    EventRegistration[]
+  ministryMembers       MinistryMember[]
+  donations             Donation[]
+  subscriptions         GivingSubscription[]
+  comments              SermonComment[]
+  podcastProgress       PodcastProgress[]
+  sermonBookmarks       SermonBookmark[]
+  notifications         Notification[]
+  ledMinistry           Ministry?              @relation("UnitLeader")
+  attendanceRecorded    MinistryAttendance[]   @relation("AttendanceRecorder")
+  reportsSubmitted      MinistryMonthlyReport[] @relation("ReportSubmitter")
 
   @@index([email])
   @@index([role])
@@ -591,11 +594,15 @@ model Ministry {
   location        String?
   isActive        Boolean  @default(true)
   sortOrder       Int      @default(0)
+  leaderUserId    String?  @unique
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
-  leaders MinistryLeader[]
-  members MinistryMember[]
+  leaders    MinistryLeader[]
+  members    MinistryMember[]
+  attendance MinistryAttendance[]
+  reports    MinistryMonthlyReport[]
+  leaderUser User?                  @relation("UnitLeader", fields: [leaderUserId], references: [id])
 
   @@index([slug])
 }
@@ -796,6 +803,51 @@ model SiteSettings {
   value     String
   label     String?
   updatedAt DateTime @updatedAt
+}
+
+// ─────────────────────────────────────────────
+// MINISTRY UNIT PORTAL
+// ─────────────────────────────────────────────
+
+model MinistryAttendance {
+  id          String   @id @default(cuid())
+  ministryId  String
+  sessionDate DateTime
+  sessionName String?
+  memberCount Int      @default(0)
+  guestCount  Int      @default(0)
+  notes       String?
+  recordedBy  String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  ministry Ministry @relation(fields: [ministryId], references: [id], onDelete: Cascade)
+  recorder User     @relation("AttendanceRecorder", fields: [recordedBy], references: [id])
+
+  @@index([ministryId, sessionDate])
+}
+
+model MinistryMonthlyReport {
+  id             String   @id @default(cuid())
+  ministryId     String
+  submittedById  String
+  month          Int
+  year           Int
+  memberCount    Int?
+  highlights     String?
+  challenges     String?
+  prayerPoints   String?
+  goalsNextMonth String?
+  status         String   @default("SUBMITTED")
+  reviewNote     String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  ministry    Ministry @relation(fields: [ministryId], references: [id], onDelete: Cascade)
+  submittedBy User     @relation("ReportSubmitter", fields: [submittedById], references: [id])
+
+  @@unique([ministryId, month, year])
+  @@index([ministryId])
 }
 
 model Page {

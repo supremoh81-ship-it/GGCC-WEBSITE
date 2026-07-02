@@ -85,20 +85,22 @@ export function SiteHeader() {
         {scrolled && <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-regal opacity-40" />}
         <div className="container mx-auto px-4 max-w-7xl flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="relative w-11 h-11 shrink-0">
+          <Link href="/" className="flex items-center gap-3 group">
+            <div className="relative w-14 h-14 shrink-0">
               <Image
                 src="/images/logo.png"
                 alt="Grace for Greatness Christian Centre"
                 fill
-                className="object-contain drop-shadow-[0_0_8px_rgba(201,168,76,0.35)] transition-all group-hover:drop-shadow-[0_0_14px_rgba(201,168,76,0.55)]"
-                sizes="44px"
+                className="object-contain drop-shadow-[0_0_12px_rgba(201,168,76,0.5)] transition-all duration-300 group-hover:drop-shadow-[0_0_22px_rgba(201,168,76,0.75)] group-hover:scale-105"
+                sizes="56px"
                 priority
               />
             </div>
-            <div className="hidden sm:flex flex-col">
-              <span className="font-display font-bold text-white text-base leading-none">Grace for Greatness</span>
-              <span className="text-[9px] text-text-muted tracking-widest uppercase leading-none mt-0.5">
+            <div className="hidden sm:flex flex-col gap-0.5">
+              <span className="font-display font-bold text-white text-[17px] leading-none tracking-tight">
+                Grace for Greatness
+              </span>
+              <span className="text-[10px] text-brand-gold/80 tracking-[0.18em] uppercase leading-none font-medium">
                 Christian Centre
               </span>
             </div>

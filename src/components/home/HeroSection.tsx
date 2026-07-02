@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Play, Heart, ArrowDown, Tv } from 'lucide-react'
 import { AmbientParticles } from '@/components/motion/AmbientParticles'
 import { GoldShimmer } from '@/components/motion/GoldShimmer'
@@ -48,6 +49,27 @@ export function HeroSection() {
 
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 max-w-5xl text-center pt-24" style={{ isolation: 'isolate' }}>
+        {/* Hero church logo */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.9, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          className="flex justify-center mb-6"
+        >
+          <div className="relative w-28 h-28 sm:w-36 sm:h-36">
+            {/* Glow ring */}
+            <div className="absolute inset-0 rounded-full bg-brand-gold/20 blur-2xl scale-125 animate-pulse" />
+            <Image
+              src="/images/logo.png"
+              alt="Grace for Greatness Christian Centre crest"
+              fill
+              className="object-contain relative z-10 drop-shadow-[0_0_28px_rgba(201,168,76,0.7)]"
+              sizes="(max-width: 640px) 112px, 144px"
+              priority
+            />
+          </div>
+        </motion.div>
+
         {/* Eyebrow */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

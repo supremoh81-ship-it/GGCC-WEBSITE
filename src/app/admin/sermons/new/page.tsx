@@ -14,6 +14,7 @@ import { sermonSchema, type SermonInput } from '@/lib/validations'
 import { toast } from 'sonner'
 import { VideoUploadButton } from '@/components/admin/VideoUploadButton'
 import { ThumbnailUploadButton } from '@/components/admin/ThumbnailUploadButton'
+import { VideoPreview } from '@/components/admin/VideoPreview'
 
 export default function AdminNewSermonPage() {
   const router = useRouter()
@@ -144,21 +145,26 @@ export default function AdminNewSermonPage() {
             error={errors.publishedAt?.message}
           />
 
-          <div className="grid sm:grid-cols-2 gap-4">
-            <div>
-              <div className="flex items-center justify-between mb-1.5">
-                <label className="block text-sm font-medium text-white">Video URL</label>
-                <VideoUploadButton onUploaded={(url) => setValue('videoUrl', url)} />
-              </div>
-              <Input
-                type="url"
-                {...register('videoUrl')}
-                error={errors.videoUrl?.message}
-                placeholder="YouTube, Facebook, TikTok, Instagram, or direct file link"
-              />
+          <div>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="block text-sm font-medium text-white">Video URL</label>
+              <VideoUploadButton onUploaded={(url) => setValue('videoUrl', url)} />
             </div>
             <Input
-              label="Audio URL"
+              type="url"
+              {...register('videoUrl')}
+              error={errors.videoUrl?.message}
+              placeholder="Paste a YouTube, Facebook, TikTok, Instagram, or direct video link"
+            />
+            <VideoPreview url={watch('videoUrl')} />
+            <p className="text-xs text-text-muted mt-1.5">
+              Paste any video link and it will auto-embed. Works with YouTube, Facebook, TikTok, Instagram, and direct files.
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 gap-4">
+            <Input
+              label="Audio URL (optional)"
               type="url"
               {...register('audioUrl')}
               error={errors.audioUrl?.message}

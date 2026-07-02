@@ -118,25 +118,53 @@ async function main() {
     },
   })
 
-  // Sample events
-  const event = await prisma.event.upsert({
-    where: { slug: 'encounter-night-2025' },
-    update: {},
+  // Greatness Conference 2026 — featured flagship event
+  const conference = await prisma.event.upsert({
+    where: { slug: 'greatness-conference-2026' },
+    update: {
+      status: 'PUBLISHED',
+      isFeatured: true,
+    },
     create: {
-      title: 'Encounter Night 2025',
-      slug: 'encounter-night-2025',
-      description: 'An evening of worship, prayer, and the presence of God.',
+      title: 'Greatness Conference 2026 & 5 Years Anniversary',
+      slug: 'greatness-conference-2026',
+      description:
+        'Join us for the Greatness Conference 2026 as we celebrate 5 years of ministry under the theme "Grace for Exploits". Five days of powerful worship, teaching, and divine encounter with anointed ministers from across Nigeria.',
       type: 'IN_PERSON',
       status: 'PUBLISHED',
-      startDate: new Date('2025-02-15T18:00:00Z'),
-      endDate: new Date('2025-02-15T21:00:00Z'),
-      location: '1 Grace Boulevard, Houston, TX',
-      capacity: 500,
+      isFeatured: true,
+      startDate: new Date('2026-07-29T17:00:00+01:00'),
+      endDate: new Date('2026-08-02T12:00:00+01:00'),
+      location: '07 Covenant Avenue, Dele Yes Sir Area, Ofatedo, Osogbo, Osun State',
+      address: '07 Covenant Avenue, Dele Yes Sir Area, Ofatedo, Osogbo, Osun State',
+      capacity: 1000,
       requiresTicket: false,
-      bannerUrl: 'https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=800&q=80',
+      organizerName: 'Grace for Greatness Christian Centre',
+      organizerEmail: 'Connectggcchurch@gmail.com',
+      tags: ['conference', 'anniversary', '2026', 'grace-for-exploits'],
     },
   })
-  console.log('Sample event created:', event.title)
+  console.log('Conference event created:', conference.title)
+
+  // Midweek service event
+  const midweek = await prisma.event.upsert({
+    where: { slug: 'school-of-purpose-2026' },
+    update: {},
+    create: {
+      title: 'School of Purpose — Midweek Service',
+      slug: 'school-of-purpose-2026',
+      description: 'Every Thursday at 5 PM — a midweek gathering to sharpen your purpose, deepen your faith, and connect with the community.',
+      type: 'IN_PERSON',
+      status: 'PUBLISHED',
+      isFeatured: false,
+      startDate: new Date('2026-07-10T17:00:00+01:00'),
+      location: 'GGCC Main Sanctuary, Ofatedo, Osogbo',
+      capacity: 300,
+      requiresTicket: false,
+      organizerName: 'Grace for Greatness Christian Centre',
+    },
+  })
+  console.log('Midweek event created:', midweek.title)
 
   // Ministries
   const ministryData = [
