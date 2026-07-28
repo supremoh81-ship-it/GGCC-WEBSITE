@@ -13,6 +13,7 @@ import { GlobalImpact } from '@/components/home/GlobalImpact'
 import { GivingBanner } from '@/components/home/GivingBanner'
 import { GalleryStrip } from '@/components/home/GalleryStrip'
 import { MembershipCTA } from '@/components/home/MembershipCTA'
+import { ConferenceBanner } from '@/components/home/ConferenceBanner'
 
 export const metadata: Metadata = {
   title: 'Grace for Greatness Christian Centre (GGCC)',
@@ -26,6 +27,7 @@ export default function HomePage() {
   return (
     <>
       <HeroSection />
+      <ConferenceBanner />
       <PastorWelcome />
       <VisionMission />
       <GalleryStrip />

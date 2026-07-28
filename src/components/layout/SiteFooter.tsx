@@ -134,7 +134,7 @@ export function SiteFooter() {
             </a>
             <span className="flex items-center gap-2 text-sm text-text-muted">
               <MapPin className="h-4 w-4 text-brand-gold" />
-              Ofatedo, Osogbo, Osun State
+              07, Covenant Avenue, Dele Yes Sir Area, Ofatedo, Osogbo, Osun State
             </span>
           </div>
           <p className="text-xs text-text-muted">

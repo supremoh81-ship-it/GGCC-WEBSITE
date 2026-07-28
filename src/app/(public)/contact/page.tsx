@@ -37,7 +37,7 @@ const contactDetails = [
   {
     icon: MapPin,
     label: 'Address',
-    value: 'No. 7, Covenant Avenue, Dele Yes Sir Area, Ofatedo, Osogbo, Osun State',
+    value: '07, Covenant Avenue, Dele Yes Sir Area, Ofatedo, Osogbo, Osun State',
   },
   { icon: Phone, label: 'Phone', value: '+234 905 5732 6674' },
   { icon: Mail, label: 'Email', value: 'Connectggcchurch@gmail.com' },

@@ -5,18 +5,26 @@ import { FadeInUp } from '@/components/motion/FadeInUp'
 import { StaggerChildren, StaggerItem } from '@/components/motion/StaggerChildren'
 import { Radio, Clock, Users, Facebook, Video, Calendar, Tv } from 'lucide-react'
 
+const FB_URL = 'https://www.facebook.com/share/17uqVxtMPn/?mibextid=wwXIfr'
+const WA_URL = 'https://chat.whatsapp.com/DhSLv5ZAzbQEvPYPiXbKu0'
+
 type Platform = 'facebook' | 'zoom' | 'whatsapp'
+
+interface PlatformLink {
+  platform: Platform
+  url: string
+}
 
 interface Session {
   id: string
   name: string
   shortName: string
   host: string
-  days: number[]   // 0=Sun … 6=Sat
+  days: number[]
   dayLabel: string
-  time: string     // 24-hr "HH:MM"
+  time: string
   displayTime: string
-  platforms: Platform[]
+  links: PlatformLink[]
   description: string
   color: string
 }
@@ -54,7 +62,10 @@ const SESSIONS: Session[] = [
     dayLabel: 'Every Friday',
     time: '19:00',
     displayTime: '7:00 PM',
-    platforms: ['facebook', 'zoom'],
+    links: [
+      { platform: 'facebook', url: FB_URL },
+      { platform: 'whatsapp', url: WA_URL },
+    ],
     description: 'Pastors reach out to people online, pray for them, and fellowship together.',
     color: 'from-violet-500/20 to-transparent',
   },
@@ -67,7 +78,9 @@ const SESSIONS: Session[] = [
     dayLabel: 'Monday – Friday',
     time: '06:30',
     displayTime: '6:30 AM',
-    platforms: ['whatsapp', 'zoom'],
+    links: [
+      { platform: 'whatsapp', url: WA_URL },
+    ],
     description: 'Share prayer requests, pray for one another, and receive prophecy.',
     color: 'from-amber-500/20 to-transparent',
   },
@@ -80,7 +93,10 @@ const SESSIONS: Session[] = [
     dayLabel: 'Every Sunday',
     time: '14:00',
     displayTime: '2:00 PM',
-    platforms: ['zoom'],
+    links: [
+      { platform: 'whatsapp', url: WA_URL },
+      { platform: 'facebook', url: FB_URL },
+    ],
     description: 'Hosted by the Pastoral Team to intercede for the church and the nations.',
     color: 'from-sky-500/20 to-transparent',
   },
@@ -145,35 +161,75 @@ function Countdown({ target }: { target: Date }) {
   )
 }
 
-function PlatformBadge({ platform }: { platform: Platform }) {
-  const config: Record<Platform, { icon: React.ReactNode; label: string; cls: string }> = {
-    facebook: {
-      icon: <Facebook className="h-3 w-3" />,
-      label: 'Facebook',
-      cls: 'bg-blue-500/15 border-blue-500/30 text-blue-400',
-    },
-    zoom: {
-      icon: <Video className="h-3 w-3" />,
-      label: 'Zoom',
-      cls: 'bg-sky-500/15 border-sky-500/30 text-sky-400',
-    },
-    whatsapp: {
-      icon: (
-        <svg className="h-3 w-3 fill-current" viewBox="0 0 24 24">
-          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
-          <path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.122 1.532 5.856L.057 23.571a.5.5 0 0 0 .611.611l5.715-1.475A11.946 11.946 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.817 9.817 0 0 1-5.003-1.37l-.36-.213-3.731.962.984-3.614-.235-.371A9.818 9.818 0 1 1 12 21.818z" />
-        </svg>
-      ),
-      label: 'WhatsApp',
-      cls: 'bg-green-500/15 border-green-500/30 text-green-400',
-    },
-  }
-  const { icon, label, cls } = config[platform]
+const PLATFORM_CONFIG: Record<Platform, {
+  icon: React.ReactNode
+  label: string
+  joinLabel: string
+  badgeCls: string
+  btnCls: string
+}> = {
+  facebook: {
+    icon: <Facebook className="h-3 w-3" />,
+    label: 'Facebook',
+    joinLabel: 'Follow on Facebook',
+    badgeCls: 'bg-blue-500/15 border-blue-500/30 text-blue-400',
+    btnCls: 'bg-blue-600 hover:bg-blue-500 text-white',
+  },
+  zoom: {
+    icon: <Video className="h-3 w-3" />,
+    label: 'Zoom',
+    joinLabel: 'Join on Zoom',
+    badgeCls: 'bg-sky-500/15 border-sky-500/30 text-sky-400',
+    btnCls: 'bg-sky-600 hover:bg-sky-500 text-white',
+  },
+  whatsapp: {
+    icon: (
+      <svg className="h-3 w-3 fill-current" viewBox="0 0 24 24">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
+        <path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.122 1.532 5.856L.057 23.571a.5.5 0 0 0 .611.611l5.715-1.475A11.946 11.946 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.817 9.817 0 0 1-5.003-1.37l-.36-.213-3.731.962.984-3.614-.235-.371A9.818 9.818 0 1 1 12 21.818z" />
+      </svg>
+    ),
+    label: 'WhatsApp',
+    joinLabel: 'Join on WhatsApp',
+    badgeCls: 'bg-green-500/15 border-green-500/30 text-green-400',
+    btnCls: 'bg-green-600 hover:bg-green-500 text-white',
+  },
+}
+
+function PlatformBadge({ platform, url }: { platform: Platform; url: string }) {
+  const { icon, label, badgeCls } = PLATFORM_CONFIG[platform]
   return (
-    <span className={`inline-flex items-center gap-1.5 border rounded-full px-2.5 py-1 text-[11px] font-medium ${cls}`}>
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`inline-flex items-center gap-1.5 border rounded-full px-2.5 py-1 text-[11px] font-medium transition-opacity hover:opacity-75 ${badgeCls}`}
+    >
       {icon}
       {label}
-    </span>
+    </a>
+  )
+}
+
+function JoinButtons({ links }: { links: PlatformLink[] }) {
+  return (
+    <div className="flex flex-wrap gap-2 mt-auto pt-2">
+      {links.map(({ platform, url }) => {
+        const { icon, joinLabel, btnCls } = PLATFORM_CONFIG[platform]
+        return (
+          <a
+            key={platform}
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors ${btnCls}`}
+          >
+            {icon}
+            {joinLabel}
+          </a>
+        )
+      })}
+    </div>
   )
 }
 
@@ -206,11 +262,9 @@ export function LiveExperience() {
           {SESSIONS.map((session) => (
             <StaggerItem key={session.id}>
               <div className={`relative rounded-3xl overflow-hidden bg-brand-navy border border-white/8 hover:border-brand-gold/30 transition-all duration-500 h-full flex flex-col`}>
-                {/* Top colour strip */}
                 <div className={`h-1.5 w-full bg-gradient-to-r ${session.color}`} />
 
                 <div className="p-7 flex flex-col gap-4 flex-1">
-                  {/* Title */}
                   <div>
                     <h3 className="font-display font-bold text-white text-lg leading-snug mb-1">
                       {session.name}
@@ -221,12 +275,10 @@ export function LiveExperience() {
                     </div>
                   </div>
 
-                  {/* Description */}
                   <p className="text-sm text-text-muted leading-relaxed flex-1">
                     {session.description}
                   </p>
 
-                  {/* Schedule */}
                   <div className="flex items-center gap-2 bg-brand-gold/8 border border-brand-gold/20 rounded-xl px-4 py-3">
                     <Clock className="h-4 w-4 text-brand-gold shrink-0" />
                     <div>
@@ -235,12 +287,15 @@ export function LiveExperience() {
                     </div>
                   </div>
 
-                  {/* Platforms */}
+                  {/* Platform badges (visual indicator) */}
                   <div className="flex flex-wrap gap-2">
-                    {session.platforms.map((p) => (
-                      <PlatformBadge key={p} platform={p} />
+                    {session.links.map(({ platform, url }) => (
+                      <PlatformBadge key={platform} platform={platform} url={url} />
                     ))}
                   </div>
+
+                  {/* Join buttons */}
+                  <JoinButtons links={session.links} />
                 </div>
               </div>
             </StaggerItem>
@@ -259,13 +314,30 @@ export function LiveExperience() {
                 <p className="text-text-muted text-sm">
                   {next.session.dayLabel} at {next.session.displayTime}
                 </p>
+                <div className="flex flex-wrap gap-2 mt-3">
+                  {next.session.links.map(({ platform, url }) => {
+                    const { icon, joinLabel, btnCls } = PLATFORM_CONFIG[platform]
+                    return (
+                      <a
+                        key={platform}
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors ${btnCls}`}
+                      >
+                        {icon}
+                        {joinLabel}
+                      </a>
+                    )
+                  })}
+                </div>
               </div>
               <Countdown target={next.target} />
             </div>
           </FadeInUp>
         )}
 
-        {/* Order of the Week Service */}
+        {/* Weekly Schedule */}
         <FadeInUp className="text-center mb-10">
           <span className="section-label mb-4 inline-flex justify-center">
             <Calendar className="h-3.5 w-3.5 mr-1.5" />
@@ -275,8 +347,8 @@ export function LiveExperience() {
             Order of the Week Service
           </h2>
           <p className="text-body-lg text-text-muted max-w-xl mx-auto">
-            Join us in person at our Osogbo location. The Main Sunday Service is also
-            streamed live online.
+            Join us in person at 07, Covenant Avenue, Ofatedo, Osogbo. The Main Sunday
+            Service is also streamed live on our Facebook page.
           </p>
         </FadeInUp>
 
@@ -284,14 +356,12 @@ export function LiveExperience() {
           {WEEKLY_SERVICES.map((group) => (
             <StaggerItem key={group.day}>
               <div className="glass-card rounded-2xl overflow-hidden h-full">
-                {/* Day header */}
                 <div className="bg-brand-gold/10 border-b border-brand-gold/20 px-5 py-3">
                   <h3 className="font-display font-bold text-brand-gold text-sm tracking-widest uppercase">
                     {group.day}
                   </h3>
                 </div>
 
-                {/* Services */}
                 <div className="p-5 space-y-3">
                   {group.services.map((svc) => (
                     <div key={svc.name}>
@@ -315,13 +385,17 @@ export function LiveExperience() {
                         )}
                       </div>
 
-                      {/* Mini live stream screen */}
+                      {/* Mini live stream screen — links to Facebook */}
                       {svc.streamEmbed && (
-                        <div className="mt-3 rounded-xl overflow-hidden border border-white/10 bg-brand-navy aspect-video relative group cursor-pointer">
-                          {/* Screen background */}
+                        <a
+                          href={FB_URL}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block mt-3 rounded-xl overflow-hidden border border-white/10 bg-brand-navy aspect-video relative group cursor-pointer"
+                          aria-label="Watch live on Facebook"
+                        >
                           <div className="absolute inset-0 bg-gradient-to-br from-brand-navy via-[#0d1e3a] to-brand-blue" />
 
-                          {/* Scan-line texture */}
                           <div
                             className="absolute inset-0 opacity-5 pointer-events-none"
                             style={{
@@ -329,30 +403,26 @@ export function LiveExperience() {
                             }}
                           />
 
-                          {/* Gold glow behind play */}
                           <div className="absolute inset-0 flex items-center justify-center">
                             <div className="absolute w-24 h-24 rounded-full bg-brand-gold/10 blur-2xl" />
                           </div>
 
-                          {/* Play button */}
                           <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
-                            <div className="w-10 h-10 rounded-full bg-brand-gold/20 border border-brand-gold/40 flex items-center justify-center group-hover:bg-brand-gold/30 group-hover:scale-110 transition-all duration-300">
-                              <Tv className="h-4 w-4 text-brand-gold" />
+                            <div className="w-10 h-10 rounded-full bg-blue-600/80 border border-blue-400/40 flex items-center justify-center group-hover:bg-blue-500 group-hover:scale-110 transition-all duration-300">
+                              <Facebook className="h-4 w-4 text-white" />
                             </div>
-                            <p className="text-[11px] text-white/70 font-medium tracking-wide">Watch Live</p>
+                            <p className="text-[11px] text-white/80 font-semibold tracking-wide">Watch Live</p>
                           </div>
 
-                          {/* LIVE badge */}
                           <div className="absolute top-2 left-2 flex items-center gap-1 bg-red-500/90 rounded-full px-2 py-0.5">
                             <div className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
                             <span className="text-[9px] font-bold text-white uppercase tracking-wider">Live</span>
                           </div>
 
-                          {/* Sundays label */}
                           <div className="absolute bottom-2 right-2">
                             <span className="text-[9px] text-white/40 tracking-widest uppercase">Sundays 10 AM</span>
                           </div>
-                        </div>
+                        </a>
                       )}
                     </div>
                   ))}
