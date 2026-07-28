@@ -5,6 +5,7 @@ import { prisma } from '@/lib/prisma'
 import { FadeInUp } from '@/components/motion/FadeInUp'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
+import Image from 'next/image'
 import { ArrowLeft, Calendar, MapPin, Clock, Users, Video, ExternalLink } from 'lucide-react'
 import { format } from 'date-fns'
 
@@ -44,19 +45,34 @@ export default async function EventDetailPage({ params }: Props) {
   const typeLabel = event.type === 'IN_PERSON' ? 'In Person' : event.type === 'ONLINE' ? 'Online' : 'Hybrid'
 
   return (
-    <main className="min-h-screen bg-brand-navy">
+    <main className="min-h-screen bg-brand-navy pt-24">
+      {/* Event flyer — shown at full quality as the event introduction */}
       {event.bannerUrl && (
-        <div className="relative h-72 sm:h-96 overflow-hidden">
-          <img
-            src={event.bannerUrl}
-            alt={event.title}
-            className="w-full h-full object-cover opacity-50"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-brand-navy via-brand-navy/40 to-transparent" />
+        <div className="container mx-auto px-4 sm:px-6 max-w-5xl pt-6 pb-2">
+          <FadeInUp>
+            <a
+              href={event.bannerUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block rounded-2xl overflow-hidden border border-brand-gold/25 bg-brand-blue shadow-[0_0_50px_rgba(201,168,76,0.08)] hover:border-brand-gold/50 transition-all duration-500 group"
+              aria-label="View full event flyer"
+            >
+              <div className="relative w-full" style={{ aspectRatio: '16/7' }}>
+                <Image
+                  src={event.bannerUrl}
+                  alt={`${event.title} event flyer`}
+                  fill
+                  className="object-contain group-hover:scale-[1.01] transition-transform duration-700"
+                  priority
+                  sizes="(max-width: 768px) 100vw, 960px"
+                />
+              </div>
+            </a>
+          </FadeInUp>
         </div>
       )}
 
-      <div className={`${event.bannerUrl ? '-mt-40 relative z-10' : 'pt-24'} container mx-auto px-4 sm:px-6 max-w-5xl pb-24`}>
+      <div className="container mx-auto px-4 sm:px-6 max-w-5xl pb-24 pt-6">
         <FadeInUp>
           <Link
             href="/events"
