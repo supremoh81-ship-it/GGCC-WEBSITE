@@ -124,6 +124,7 @@ async function main() {
     update: {
       status: 'PUBLISHED',
       isFeatured: true,
+      bannerUrl: '/images/greatness-conference-2026.jpg',
     },
     create: {
       title: 'Greatness Conference 2026 & 5 Years Anniversary',
