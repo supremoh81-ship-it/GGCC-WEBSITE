@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextRequest, NextResponse } from 'next/server'
+import { requireAdmin } from '@/lib/admin-auth'
 import { prisma } from '@/lib/prisma'
 import { z } from 'zod'
 import { resolveSpeakerId, resolveSeriesId } from '@/lib/utils/sermon-resolve'
@@ -37,11 +37,9 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
   }
 }
 
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
-  const session = await auth()
-  if (!session?.user || !['ADMIN', 'SUPER_ADMIN', 'EDITOR'].includes(session.user.role as string)) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
+export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+  const denied = await requireAdmin(req)
+  if (denied) return denied
 
   try {
     const body = await req.json()
@@ -75,11 +73,9 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
   }
 }
 
-export async function DELETE(_req: Request, { params }: { params: { id: string } }) {
-  const session = await auth()
-  if (!session?.user || !['ADMIN', 'SUPER_ADMIN'].includes(session.user.role as string)) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
+export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+  const denied = await requireAdmin(req)
+  if (denied) return denied
 
   try {
     await prisma.sermon.delete({ where: { id: params.id } })

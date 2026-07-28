@@ -1,13 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { requireAdmin } from '@/lib/admin-auth'
 import { generateSignedUploadParams } from '@/lib/cloudinary'
 import { getCategory } from '@/lib/data/gallery-categories'
 
 export async function POST(req: NextRequest) {
-  const session = await auth()
-  if (!session?.user || !['ADMIN', 'SUPER_ADMIN', 'MINISTER'].includes(session.user.role as string)) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
+  const denied = await requireAdmin(req)
+  if (denied) return denied
 
   const { category } = await req.json().catch(() => ({}))
   if (!category || !getCategory(category)) {

@@ -1,23 +1,32 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
+import { verifyAdminToken, ADMIN_COOKIE } from '@/lib/admin-auth'
 import { prisma } from '@/lib/prisma'
 import { z } from 'zod'
 
 export const dynamic = 'force-dynamic'
 
-async function verifyAccess(slug: string, userId: string, role: string) {
+async function resolveAccess(req: NextRequest, slug: string) {
+  const adminToken = req.cookies.get(ADMIN_COOKIE)?.value
+  if (adminToken && (await verifyAdminToken(adminToken))) {
+    const ministry = await prisma.ministry.findUnique({ where: { slug } })
+    return { ministry: ministry ?? null, userId: null }
+  }
+
+  const session = await auth()
+  if (!session?.user?.id) return { ministry: null, userId: null }
   const ministry = await prisma.ministry.findUnique({ where: { slug } })
-  if (!ministry) return null
-  if (ministry.leaderUserId !== userId && role !== 'ADMIN' && role !== 'SUPER_ADMIN') return null
-  return ministry
+  if (!ministry) return { ministry: null, userId: null }
+  const role = session.user.role as string
+  if (ministry.leaderUserId !== session.user.id && role !== 'ADMIN' && role !== 'SUPER_ADMIN') {
+    return { ministry: null, userId: null }
+  }
+  return { ministry, userId: session.user.id }
 }
 
 export async function GET(req: NextRequest, { params }: { params: { slug: string } }) {
-  const session = await auth()
-  if (!session?.user?.id) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-
-  const ministry = await verifyAccess(params.slug, session.user.id, session.user.role!)
-  if (!ministry) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  const { ministry } = await resolveAccess(req, params.slug)
+  if (!ministry) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const sessions = await prisma.ministryAttendance.findMany({
     where: { ministryId: ministry.id },
@@ -37,11 +46,8 @@ const sessionSchema = z.object({
 })
 
 export async function POST(req: NextRequest, { params }: { params: { slug: string } }) {
-  const session = await auth()
-  if (!session?.user?.id) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-
-  const ministry = await verifyAccess(params.slug, session.user.id, session.user.role!)
-  if (!ministry) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  const { ministry, userId } = await resolveAccess(req, params.slug)
+  if (!ministry) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const body = await req.json()
   const parsed = sessionSchema.safeParse(body)
@@ -55,7 +61,7 @@ export async function POST(req: NextRequest, { params }: { params: { slug: strin
       memberCount: parsed.data.memberCount,
       guestCount: parsed.data.guestCount,
       notes: parsed.data.notes ?? null,
-      recordedBy: session.user.id,
+      recordedBy: userId ?? 'admin',
     },
   })
 

@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import NextImage from 'next/image'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils/cn'
 import {
   LayoutDashboard,
@@ -18,6 +18,7 @@ import {
   MessageSquare,
   Star,
   ChevronRight,
+  LogOut,
   Menu,
   X,
 } from 'lucide-react'
@@ -28,7 +29,6 @@ interface SidebarItem {
   href: string
   icon: React.ElementType
   badge?: number
-  adminOnly?: boolean
 }
 
 const navSections: { title: string; items: SidebarItem[] }[] = [
@@ -68,16 +68,27 @@ const navSections: { title: string; items: SidebarItem[] }[] = [
   {
     title: 'Admin',
     items: [
-      { label: 'Users', href: '/admin/users', icon: Users, adminOnly: true },
-      { label: 'Settings', href: '/admin/settings', icon: Settings, adminOnly: true },
+      { label: 'Users', href: '/admin/users', icon: Users },
+      { label: 'Settings', href: '/admin/settings', icon: Settings },
     ],
   },
 ]
 
-export function AdminSidebar({ role }: { role: string }) {
+export function AdminSidebar() {
   const pathname = usePathname()
+  const router = useRouter()
   const [mobileOpen, setMobileOpen] = useState(false)
-  const isSuperAdmin = ['ADMIN', 'SUPER_ADMIN'].includes(role)
+  const [loggingOut, setLoggingOut] = useState(false)
+
+  async function handleLogout() {
+    setLoggingOut(true)
+    try {
+      await fetch('/api/admin/auth/logout', { method: 'POST' })
+    } finally {
+      router.push('/admin/login')
+      router.refresh()
+    }
+  }
 
   const sidebar = (
     <div className="h-full flex flex-col bg-brand-blue border-r border-white/8 w-64">
@@ -95,62 +106,65 @@ export function AdminSidebar({ role }: { role: string }) {
           </div>
           <div>
             <div className="font-display font-bold text-white text-sm">GGCC Admin</div>
-            <div className="text-[10px] text-text-muted capitalize">{role.toLowerCase().replace('_', ' ')}</div>
+            <div className="text-[10px] text-text-muted">Content Management</div>
           </div>
         </Link>
       </div>
 
       {/* Nav */}
       <nav className="flex-1 overflow-y-auto p-3 space-y-4">
-        {navSections.map((section) => {
-          const visibleItems = section.items.filter((item) => !item.adminOnly || isSuperAdmin)
-          if (!visibleItems.length) return null
-
-          return (
-            <div key={section.title}>
-              <div className="px-3 py-1 text-[10px] font-semibold text-text-muted tracking-widest uppercase mb-1">
-                {section.title}
-              </div>
-              <div className="space-y-0.5">
-                {visibleItems.map((item) => {
-                  const active = pathname === item.href
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      onClick={() => setMobileOpen(false)}
-                      className={cn(
-                        'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all',
-                        active
-                          ? 'bg-brand-gold/15 text-brand-gold border border-brand-gold/25'
-                          : 'text-text-muted hover:text-white hover:bg-white/5'
-                      )}
-                    >
-                      <item.icon className={cn('h-4 w-4 flex-shrink-0', active && 'text-brand-gold')} />
-                      <span className="flex-1">{item.label}</span>
-                      {item.badge !== undefined && (
-                        <span className="text-xs bg-brand-gold/20 text-brand-gold rounded-full px-2 py-0.5">
-                          {item.badge}
-                        </span>
-                      )}
-                    </Link>
-                  )
-                })}
-              </div>
+        {navSections.map((section) => (
+          <div key={section.title}>
+            <div className="px-3 py-1 text-[10px] font-semibold text-text-muted tracking-widest uppercase mb-1">
+              {section.title}
             </div>
-          )
-        })}
+            <div className="space-y-0.5">
+              {section.items.map((item) => {
+                const active = pathname === item.href
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setMobileOpen(false)}
+                    className={cn(
+                      'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all',
+                      active
+                        ? 'bg-brand-gold/15 text-brand-gold border border-brand-gold/25'
+                        : 'text-text-muted hover:text-white hover:bg-white/5'
+                    )}
+                  >
+                    <item.icon className={cn('h-4 w-4 flex-shrink-0', active && 'text-brand-gold')} />
+                    <span className="flex-1">{item.label}</span>
+                    {item.badge !== undefined && (
+                      <span className="text-xs bg-brand-gold/20 text-brand-gold rounded-full px-2 py-0.5">
+                        {item.badge}
+                      </span>
+                    )}
+                  </Link>
+                )
+              })}
+            </div>
+          </div>
+        ))}
       </nav>
 
       {/* Footer */}
-      <div className="p-4 border-t border-white/8">
+      <div className="p-4 border-t border-white/8 space-y-1">
         <Link
           href="/"
-          className="flex items-center gap-2 text-xs text-text-muted hover:text-white transition-colors"
+          className="flex items-center gap-2 text-xs text-text-muted hover:text-white transition-colors px-3 py-2 rounded-xl hover:bg-white/5"
         >
           <ChevronRight className="h-3.5 w-3.5 rotate-180" />
           Back to Website
         </Link>
+        <button
+          onClick={handleLogout}
+          disabled={loggingOut}
+          className="w-full flex items-center gap-2 text-xs text-red-400/70 hover:text-red-400 transition-colors px-3 py-2 rounded-xl hover:bg-red-500/10 disabled:opacity-50"
+        >
+          <LogOut className="h-3.5 w-3.5" />
+          {loggingOut ? 'Signing out…' : 'Sign Out'}
+        </button>
       </div>
     </div>
   )

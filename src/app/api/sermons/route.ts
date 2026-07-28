@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { auth } from '@/lib/auth'
+import { requireAdmin } from '@/lib/admin-auth'
 import { sermonSchema } from '@/lib/validations'
 import { resolveSpeakerId, resolveSeriesId } from '@/lib/utils/sermon-resolve'
 
@@ -66,15 +66,8 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const session = await auth()
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
-
-  const adminRoles = ['ADMIN', 'SUPER_ADMIN', 'MINISTER']
-  if (!adminRoles.includes(session.user.role as string)) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-  }
+  const denied = await requireAdmin(req)
+  if (denied) return denied
 
   const body = await req.json()
   const parsed = sermonSchema.safeParse(body)
