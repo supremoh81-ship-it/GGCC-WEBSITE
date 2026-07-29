@@ -1,8 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { format } from 'date-fns'
-import { Upload, Trash2, ImageOff } from 'lucide-react'
+import { Upload, Trash2, ImageOff, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 
 interface Photo {
@@ -29,95 +29,109 @@ export function GalleryCategorySection({
   initialPhotos: Photo[]
 }) {
   const [photos, setPhotos] = useState(initialPhotos)
-  const [opening, setOpening] = useState(false)
+  const [uploading, setUploading] = useState(false)
+  const [progress, setProgress] = useState<Record<string, number>>({})
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
-  async function handleUpload() {
-    setOpening(true)
-    try {
-      const res = await fetch('/api/admin/gallery/sign', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ category: slug }),
-      })
-      if (!res.ok) throw new Error()
-      const signed = await res.json()
+  async function uploadFile(file: File): Promise<void> {
+    const id = `${file.name}-${Date.now()}`
+    setProgress((p) => ({ ...p, [id]: 0 }))
 
-      if (!window.cloudinary) throw new Error('Upload widget not loaded yet')
+    // 1. Get signed params from our server
+    const signRes = await fetch('/api/admin/gallery/sign', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ category: slug }),
+    })
 
-      const widget = window.cloudinary.createUploadWidget(
-        {
-          cloudName: signed.cloudName,
-          apiKey: signed.apiKey,
-          uploadSignature: signed.signature,
-          uploadSignatureTimestamp: signed.timestamp,
-          folder: signed.folder,
-          uploadPreset: signed.uploadPreset,
-          sources: ['local', 'camera'],
-          multiple: true,
-          maxFiles: 25,
-          resourceType: 'image',
-          clientAllowedFormats: ['jpg', 'jpeg', 'png', 'webp', 'heic'],
-          styles: {
-            palette: {
-              window: '#1C1422',
-              windowBorder: '#C9A84C',
-              tabIcon: '#C9A84C',
-              menuIcons: '#E8C97A',
-              textDark: '#100B16',
-              textLight: '#FFFFFF',
-              link: '#C9A84C',
-              action: '#C9A84C',
-              inactiveTabIcon: '#8A93A6',
-              error: '#E85D75',
-              inProgress: '#C9A84C',
-              complete: '#56B87D',
-              sourceBg: '#100B16',
-            },
-          },
-        },
-        async (_error, result) => {
-          if (result?.event !== 'success' || !result.info) return
+    if (!signRes.ok) throw new Error('Could not get upload credentials.')
+    const signed = await signRes.json()
 
-          const { public_id, secure_url } = result.info
-          const createRes = await fetch('/api/admin/gallery/photos', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              category: slug,
-              publicId: public_id,
-              url: secure_url,
-              thumbnailUrl: cldThumb(secure_url),
-            }),
-          })
-
-          if (!createRes.ok) {
-            toast.error('Image uploaded but failed to save. Refresh and try again.')
-            return
-          }
-
-          const { data } = await createRes.json()
-          setPhotos((prev) => [data, ...prev])
-        }
-      )
-
-      widget.open()
-    } catch {
-      toast.error('Could not start upload. Please try again.')
-    } finally {
-      setOpening(false)
+    if (!signed.cloudName || !signed.apiKey) {
+      throw new Error('Cloudinary is not configured. Add env vars in Vercel.')
     }
+
+    // 2. Upload directly to Cloudinary via XHR so we can track progress
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('timestamp', String(signed.timestamp))
+    formData.append('signature', signed.signature)
+    formData.append('api_key', signed.apiKey)
+    formData.append('folder', signed.folder)
+    if (signed.uploadPreset) formData.append('upload_preset', signed.uploadPreset)
+
+    const url = `https://api.cloudinary.com/v1_1/${signed.cloudName}/image/upload`
+
+    const secureUrl = await new Promise<string>((resolve, reject) => {
+      const xhr = new XMLHttpRequest()
+      xhr.open('POST', url)
+      xhr.upload.onprogress = (e) => {
+        if (e.lengthComputable) {
+          setProgress((p) => ({ ...p, [id]: Math.round((e.loaded / e.total) * 100) }))
+        }
+      }
+      xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          const data = JSON.parse(xhr.responseText)
+          resolve(data.secure_url)
+        } else {
+          reject(new Error(`Upload failed (${xhr.status})`))
+        }
+      }
+      xhr.onerror = () => reject(new Error('Network error during upload'))
+      xhr.send(formData)
+    })
+
+    setProgress((p) => ({ ...p, [id]: 100 }))
+
+    // 3. Save to our database
+    const publicId = secureUrl.split('/upload/')[1]?.replace(/\.[^.]+$/, '') ?? ''
+    const createRes = await fetch('/api/admin/gallery/photos', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        category: slug,
+        publicId: `${signed.cloudName}/${publicId}`,
+        url: secureUrl,
+        thumbnailUrl: cldThumb(secureUrl),
+      }),
+    })
+
+    if (!createRes.ok) throw new Error('Uploaded but failed to save. Refresh and check.')
+
+    const { data } = await createRes.json()
+    setPhotos((prev) => [data, ...prev])
+    setProgress((p) => { const n = { ...p }; delete n[id]; return n })
+  }
+
+  async function handleFiles(files: FileList | null) {
+    if (!files || files.length === 0) return
+    setUploading(true)
+
+    const results = await Promise.allSettled(Array.from(files).map(uploadFile))
+    const failed = results.filter((r) => r.status === 'rejected')
+
+    if (failed.length > 0) {
+      const msg = (failed[0] as PromiseRejectedResult).reason?.message ?? 'Upload failed'
+      toast.error(msg)
+    }
+    if (results.some((r) => r.status === 'fulfilled')) {
+      toast.success(`${results.filter((r) => r.status === 'fulfilled').length} photo(s) uploaded.`)
+    }
+
+    setUploading(false)
+    setProgress({})
+    if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
   async function handleDelete(id: string) {
     if (!confirm('Delete this photo? This cannot be undone.')) return
-
     const res = await fetch(`/api/admin/gallery/photos/${id}`, { method: 'DELETE' })
-    if (!res.ok) {
-      toast.error('Failed to delete photo.')
-      return
-    }
+    if (!res.ok) { toast.error('Failed to delete photo.'); return }
     setPhotos((prev) => prev.filter((p) => p.id !== id))
   }
+
+  const uploadCount = Object.keys(progress).length
 
   return (
     <div className="glass-card rounded-2xl p-6">
@@ -126,15 +140,47 @@ export function GalleryCategorySection({
           <h2 className="font-display font-bold text-white text-lg">{title}</h2>
           <p className="text-sm text-text-muted mt-0.5">{description}</p>
         </div>
+
         <button
-          onClick={handleUpload}
-          disabled={opening}
+          onClick={() => fileInputRef.current?.click()}
+          disabled={uploading}
           className="btn-gold text-sm flex items-center gap-2 shrink-0 disabled:opacity-60"
         >
-          <Upload className="h-4 w-4" />
-          {opening ? 'Opening...' : 'Upload Photos'}
+          {uploading
+            ? <><Loader2 className="h-4 w-4 animate-spin" /> Uploading {uploadCount}…</>
+            : <><Upload className="h-4 w-4" /> Upload Photos</>
+          }
         </button>
+
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/jpeg,image/png,image/webp,image/heic"
+          multiple
+          className="hidden"
+          onChange={(e) => handleFiles(e.target.files)}
+        />
       </div>
+
+      {/* Progress bars */}
+      {uploadCount > 0 && (
+        <div className="mb-4 space-y-2">
+          {Object.entries(progress).map(([id, pct]) => (
+            <div key={id} className="space-y-1">
+              <div className="flex justify-between text-xs text-text-muted">
+                <span>Uploading…</span>
+                <span>{pct}%</span>
+              </div>
+              <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-brand-gold rounded-full transition-all duration-200"
+                  style={{ width: `${pct}%` }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
 
       {photos.length === 0 ? (
         <div className="text-center py-12 border border-dashed border-white/10 rounded-xl">

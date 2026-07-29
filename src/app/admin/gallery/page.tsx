@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import Script from 'next/script'
 import { prisma } from '@/lib/prisma'
 import { GALLERY_CATEGORIES } from '@/lib/data/gallery-categories'
 import { GalleryCategorySection } from '@/components/admin/GalleryCategorySection'
@@ -18,8 +17,6 @@ export default async function AdminGalleryPage() {
 
   return (
     <div className="space-y-6">
-      <Script src="https://upload-widget.cloudinary.com/global/all.js" strategy="lazyOnload" />
-
       <div>
         <h1 className="text-xl font-display font-bold text-white">Gallery</h1>
         <p className="text-sm text-text-muted mt-0.5">
