@@ -4,8 +4,9 @@ import { FadeInUp } from '@/components/motion/FadeInUp'
 import { GoldShimmer } from '@/components/motion/GoldShimmer'
 import { ArrowRight } from 'lucide-react'
 import { prisma } from '@/lib/prisma'
+import { GalleryMarquee } from './GalleryMarquee'
 
-const STRIP_COUNT = 10
+const STRIP_COUNT = 12
 
 function cldFit(url: string, size: number) {
   return url.replace('/upload/', `/upload/c_limit,w_${size},h_${size},q_auto,f_auto/`)
@@ -30,7 +31,7 @@ export async function GalleryStrip() {
 
   return (
     <section className="section-padding-sm bg-brand-navy overflow-hidden">
-      <div className="container mx-auto px-4 max-w-7xl mb-8">
+      <div className="container mx-auto px-4 max-w-7xl mb-10">
         <FadeInUp className="flex items-center justify-between">
           <div>
             <span className="section-label mb-3 inline-flex">Gallery</span>
@@ -46,25 +47,7 @@ export async function GalleryStrip() {
         </FadeInUp>
       </div>
 
-      {/* Horizontal scroll strip */}
-      <div className="flex gap-3 overflow-x-auto no-scrollbar px-4 pb-2">
-        {photos.map((photo) => (
-          <Link
-            key={photo.id}
-            href={photo.href}
-            className="flex-none relative rounded-2xl overflow-hidden w-80 h-64 sm:w-96 sm:h-72 bg-white/5 group"
-          >
-            <Image
-              src={photo.src}
-              alt={photo.alt}
-              fill
-              sizes="(max-width: 640px) 320px, 384px"
-              className="object-contain transition-transform duration-700 group-hover:scale-105"
-            />
-            <div className="absolute inset-0 bg-brand-navy/10 group-hover:bg-brand-navy/0 transition-colors" />
-          </Link>
-        ))}
-      </div>
+      <GalleryMarquee photos={photos} />
     </section>
   )
 }
