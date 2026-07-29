@@ -21,15 +21,15 @@ export function GalleryMarquee({ photos }: { photos: Photo[] }) {
           <Link
             key={`${photo.id}-${i}`}
             href={photo.href}
-            className="relative flex-none rounded-2xl overflow-hidden mx-2 group"
-            style={{ width: '320px', height: '240px' }}
+            className="relative flex-none rounded-2xl overflow-hidden mx-2 group bg-white/5"
+            style={{ width: '280px', height: '340px' }}
           >
             <Image
               src={photo.src}
               alt={photo.alt}
               fill
-              sizes="320px"
-              className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+              sizes="280px"
+              className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
             />
             {/* Hover overlay with gold shimmer at bottom */}
             <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />

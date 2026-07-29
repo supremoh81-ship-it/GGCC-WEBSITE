@@ -8,8 +8,8 @@ import { GalleryMarquee } from './GalleryMarquee'
 
 const STRIP_COUNT = 12
 
-function cldFit(url: string, size: number) {
-  return url.replace('/upload/', `/upload/c_limit,w_${size},h_${size},q_auto,f_auto/`)
+function cldFill(url: string, w: number, h: number) {
+  return url.replace('/upload/', `/upload/c_fill,g_auto,w_${w},h_${h},q_auto,f_auto/`)
 }
 
 export async function GalleryStrip() {
@@ -24,7 +24,7 @@ export async function GalleryStrip() {
 
   const photos = records.map((p) => ({
     id: p.id,
-    src: cldFit(p.url, 700),
+    src: cldFill(p.url, 560, 420),
     href: `/gallery?category=${p.album.slug}`,
     alt: p.caption ?? p.album.title,
   }))
