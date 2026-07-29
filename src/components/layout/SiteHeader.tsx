@@ -55,12 +55,22 @@ const navItems = [
   },
 ]
 
+const HIDDEN_PATHS = ['/login', '/register', '/forgot-password', '/reset-password']
+
 export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false)
   const [hidden, setHidden] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
   const pathname = usePathname()
+
+  const isHiddenRoute =
+    HIDDEN_PATHS.includes(pathname) ||
+    pathname.startsWith('/admin') ||
+    pathname.startsWith('/member') ||
+    pathname.startsWith('/ministry-portal')
+
+  if (isHiddenRoute) return null
 
   useEffect(() => {
     let lastY = window.scrollY
