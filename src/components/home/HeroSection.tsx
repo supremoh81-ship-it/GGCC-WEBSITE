@@ -51,20 +51,55 @@ export function HeroSection() {
       <div className="relative z-10 container mx-auto px-4 max-w-5xl text-center pt-24" style={{ isolation: 'isolate' }}>
         {/* Hero church logo */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.9, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          className="flex justify-center mb-6"
+          initial={{ opacity: 0, scale: 0.72, rotate: -6 }}
+          animate={{ opacity: 1, scale: 1, rotate: 0 }}
+          transition={{ duration: 1.1, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          className="flex justify-center mb-8"
         >
-          <div className="relative w-28 h-28 sm:w-36 sm:h-36">
-            {/* Glow ring */}
-            <div className="absolute inset-0 rounded-full bg-brand-gold/20 blur-2xl scale-125 animate-pulse" />
+          <div className="relative w-40 h-40 sm:w-52 sm:h-52">
+            {/* Outermost ambient bloom */}
+            <div
+              className="absolute inset-0 rounded-full scale-[2] blur-3xl pointer-events-none"
+              style={{ background: 'radial-gradient(circle, rgba(201,168,76,0.18) 0%, rgba(31,168,160,0.06) 50%, transparent 70%)' }}
+            />
+
+            {/* Pulsing mid glow */}
+            <div
+              className="absolute inset-0 rounded-full scale-[1.35] blur-xl animate-pulse pointer-events-none"
+              style={{ background: 'radial-gradient(circle, rgba(201,168,76,0.28) 0%, transparent 65%)' }}
+            />
+
+            {/* Spinning conic ring — masked to border only */}
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 22, repeat: Infinity, ease: 'linear' }}
+              className="absolute -inset-[10px] rounded-full pointer-events-none"
+              style={{
+                background:
+                  'conic-gradient(from 0deg, #C9A84C 0deg, #E8C97A 45deg, #1FA8A0 130deg, #C9A84C 175deg, #C23A82 250deg, #C9A84C 310deg, #E8C97A 360deg)',
+                WebkitMask:
+                  'radial-gradient(farthest-side, transparent calc(100% - 3px), #fff calc(100% - 3px))',
+                mask:
+                  'radial-gradient(farthest-side, transparent calc(100% - 3px), #fff calc(100% - 3px))',
+              }}
+            />
+
+            {/* Static outer glass ring */}
+            <div className="absolute -inset-[10px] rounded-full border border-white/10 pointer-events-none" />
+
+            {/* Sharp inner glow right behind the logo */}
+            <div
+              className="absolute inset-0 rounded-full blur-md pointer-events-none"
+              style={{ background: 'radial-gradient(circle, rgba(201,168,76,0.35) 0%, transparent 70%)' }}
+            />
+
+            {/* Logo */}
             <Image
               src="/images/logo.png"
               alt="Grace for Greatness Christian Centre crest"
               fill
-              className="object-contain relative z-10 drop-shadow-[0_0_28px_rgba(201,168,76,0.7)]"
-              sizes="(max-width: 640px) 112px, 144px"
+              className="object-contain relative z-10 drop-shadow-[0_0_22px_rgba(201,168,76,0.85)]"
+              sizes="(max-width: 640px) 160px, 208px"
               priority
             />
           </div>
