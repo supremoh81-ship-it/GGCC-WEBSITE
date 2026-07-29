@@ -1,9 +1,18 @@
-import { cookies } from 'next/headers'
+import { cookies, headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { verifyAdminToken } from '@/lib/admin-auth'
 import { AdminSidebar } from '@/components/admin/AdminSidebar'
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  const headersList = await headers()
+  const pathname = headersList.get('x-pathname') ?? ''
+
+  // Login page shares this layout but must not trigger an auth redirect.
+  // The middleware already enforces access on every other admin route.
+  if (pathname === '/admin/login') {
+    return <>{children}</>
+  }
+
   const cookieStore = await cookies()
   const token = cookieStore.get('ggcc_admin')?.value
 

@@ -16,10 +16,15 @@ async function verifyAdminCookie(req: NextRequest): Promise<boolean> {
   }
 }
 
+function withPathname(req: NextRequest, pathname: string): NextResponse {
+  const headers = new Headers(req.headers)
+  headers.set('x-pathname', pathname)
+  return NextResponse.next({ request: { headers } })
+}
+
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
 
-  // Member-only pages: require NextAuth session
   if (pathname.startsWith('/member')) {
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET })
     if (!token) {
@@ -27,10 +32,9 @@ export async function middleware(req: NextRequest) {
       url.searchParams.set('callbackUrl', pathname)
       return NextResponse.redirect(url)
     }
-    return NextResponse.next()
+    return withPathname(req, pathname)
   }
 
-  // Ministry portal: require member session with minister/admin role
   if (pathname.startsWith('/ministry-portal')) {
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET })
     if (!token) {
@@ -42,13 +46,15 @@ export async function middleware(req: NextRequest) {
     if (!role || !['MINISTER', 'ADMIN', 'SUPER_ADMIN'].includes(role)) {
       return NextResponse.redirect(new URL('/403', req.url))
     }
-    return NextResponse.next()
+    return withPathname(req, pathname)
   }
 
-  // Admin login page is always public
-  if (pathname === '/admin/login') return NextResponse.next()
+  // Admin login page — always allowed, but still forward pathname so the
+  // admin layout knows to skip its cookie check and render children directly.
+  if (pathname === '/admin/login') {
+    return withPathname(req, pathname)
+  }
 
-  // All other /admin/* and /api/admin/* require the admin JWT cookie
   if (pathname.startsWith('/admin') || pathname.startsWith('/api/admin')) {
     const valid = await verifyAdminCookie(req)
     if (!valid) {
@@ -57,10 +63,10 @@ export async function middleware(req: NextRequest) {
       }
       return NextResponse.redirect(new URL('/admin/login', req.url))
     }
-    return NextResponse.next()
+    return withPathname(req, pathname)
   }
 
-  return NextResponse.next()
+  return withPathname(req, pathname)
 }
 
 export const config = {
