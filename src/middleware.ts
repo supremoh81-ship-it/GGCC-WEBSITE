@@ -49,9 +49,8 @@ export async function middleware(req: NextRequest) {
     return withPathname(req, pathname)
   }
 
-  // Admin login page — always allowed, but still forward pathname so the
-  // admin layout knows to skip its cookie check and render children directly.
-  if (pathname === '/admin/login') {
+  // Admin auth endpoints — always allowed (no cookie required to log in/out).
+  if (pathname === '/admin/login' || pathname.startsWith('/api/admin/auth/')) {
     return withPathname(req, pathname)
   }
 
