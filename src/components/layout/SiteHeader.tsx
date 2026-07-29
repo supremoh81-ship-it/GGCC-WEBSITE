@@ -57,12 +57,23 @@ const navItems = [
 
 export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false)
+  const [hidden, setHidden] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
   const pathname = usePathname()
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20)
+    let lastY = window.scrollY
+    const onScroll = () => {
+      const y = window.scrollY
+      setScrolled(y > 20)
+      if (y < 80) {
+        setHidden(false)
+      } else {
+        setHidden(y > lastY)
+      }
+      lastY = y
+    }
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
@@ -79,7 +90,10 @@ export function SiteHeader() {
           'fixed top-0 left-0 right-0 z-[200] transition-all duration-500',
           scrolled
             ? 'bg-brand-navy/95 backdrop-blur-xl py-3'
-            : 'bg-transparent py-5'
+            : 'bg-transparent py-5',
+          hidden
+            ? '-translate-y-full opacity-0 pointer-events-none'
+            : 'translate-y-0 opacity-100'
         )}
       >
         {scrolled && <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-regal opacity-40" />}
