@@ -4,7 +4,6 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, CheckCircle2, AlertCircle, FileText } from 'lucide-react'
 import { ALL_MINISTRIES } from '@/lib/data/ministries'
-import type { Metadata } from 'next'
 
 const UNIT_NAMES = ALL_MINISTRIES.map((m) => m.name)
 

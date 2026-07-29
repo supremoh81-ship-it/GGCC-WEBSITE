@@ -52,7 +52,7 @@ export function MinistriesGrid() {
                 </p>
 
                 <Link
-                  href="#"
+                  href={`/ministries/join/${ministry.slug}`}
                   className="inline-flex items-center gap-1.5 text-xs font-semibold rounded-full px-4 py-2 border transition-all duration-200 self-start hover:opacity-90 active:scale-95"
                   style={{
                     color: ministry.color,

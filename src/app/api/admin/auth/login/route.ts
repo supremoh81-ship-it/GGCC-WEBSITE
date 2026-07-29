@@ -34,14 +34,11 @@ export async function POST(req: NextRequest) {
   const adminHash  = process.env.ADMIN_PASSWORD_HASH?.trim()
 
   if (!adminEmail || !adminHash) {
-    console.error('[admin-login] env vars missing — ADMIN_EMAIL:', !!adminEmail, 'ADMIN_PASSWORD_HASH:', !!adminHash)
     return NextResponse.json({ error: 'Server configuration error' }, { status: 500 })
   }
 
   const emailMatch    = typeof email === 'string' && email.toLowerCase().trim() === adminEmail.toLowerCase()
   const passwordMatch = typeof password === 'string' && (await bcrypt.compare(password.trim(), adminHash))
-
-  console.log('[admin-login] email_match:', emailMatch, '| hash_len:', adminHash.length, '| hash_prefix:', adminHash.slice(0, 7), '| pw_match:', passwordMatch)
 
   if (!emailMatch || !passwordMatch) {
     recordFailedAttempt(ip)
