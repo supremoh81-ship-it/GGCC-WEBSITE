@@ -48,6 +48,7 @@ const sessionSchema = z.object({
 export async function POST(req: NextRequest, { params }: { params: { slug: string } }) {
   const { ministry, userId } = await resolveAccess(req, params.slug)
   if (!ministry) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (!userId) return NextResponse.json({ error: 'Attendance recording requires a member login' }, { status: 403 })
 
   const body = await req.json()
   const parsed = sessionSchema.safeParse(body)
@@ -61,7 +62,7 @@ export async function POST(req: NextRequest, { params }: { params: { slug: strin
       memberCount: parsed.data.memberCount,
       guestCount: parsed.data.guestCount,
       notes: parsed.data.notes ?? null,
-      recordedBy: userId ?? 'admin',
+      recordedBy: userId,
     },
   })
 

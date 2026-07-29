@@ -924,6 +924,46 @@ model NewsletterSubscriber {
 }
 
 // ─────────────────────────────────────────────
+// PUBLIC UNIT APPLICATIONS & REPORTS
+// ─────────────────────────────────────────────
+
+enum UnitMemberStatus {
+  PENDING
+  APPROVED
+}
+
+model UnitMember {
+  id                  String           @id @default(cuid())
+  unitName            String
+  fullName            String
+  dateOfBirth         DateTime         @db.Date
+  phone               String?
+  email               String?
+  reasonForJoining    String
+  salvationExperience String
+  status              UnitMemberStatus @default(PENDING)
+  createdAt           DateTime         @default(now())
+
+  @@index([unitName])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model UnitReport {
+  id           String   @id @default(cuid())
+  unitName     String
+  memberName   String
+  reportText   String
+  activityDate DateTime @db.Date
+  reportMonth  String
+  createdAt    DateTime @default(now())
+
+  @@index([unitName])
+  @@index([reportMonth])
+  @@index([createdAt])
+}
+
+// ─────────────────────────────────────────────
 // ANALYTICS
 // ─────────────────────────────────────────────
 

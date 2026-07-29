@@ -49,6 +49,7 @@ const reportSchema = z.object({
 export async function POST(req: NextRequest, { params }: { params: { slug: string } }) {
   const { ministry, userId } = await resolveAccess(req, params.slug)
   if (!ministry) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (!userId) return NextResponse.json({ error: 'Report submission requires a member login' }, { status: 403 })
 
   const body = await req.json()
   const parsed = reportSchema.safeParse(body)
@@ -66,7 +67,7 @@ export async function POST(req: NextRequest, { params }: { params: { slug: strin
     },
     create: {
       ministryId: ministry.id,
-      submittedById: userId ?? ministry.id,
+      submittedById: userId,
       month: parsed.data.month,
       year: parsed.data.year,
       memberCount: parsed.data.memberCount ?? null,

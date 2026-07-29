@@ -349,6 +349,34 @@ body {
   transform: translateY(-2px);
 }
 
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 2rem;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.75);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  border-radius: var(--radius-full);
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    background var(--duration-base) var(--ease-out-expo),
+    border-color var(--duration-base) var(--ease-out-expo),
+    color var(--duration-base) var(--ease-out-expo),
+    transform var(--duration-base) var(--ease-out-expo);
+}
+
+.btn-outline:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: white;
+  transform: translateY(-2px);
+}
+
 .btn-ghost {
   display: inline-flex;
   align-items: center;
@@ -571,6 +599,47 @@ body {
 /* ─────────────────────────────────────────────────────────────
    RESPONSIVE UTILITIES
 ───────────────────────────────────────────────────────────── */
+
+/* ─────────────────────────────────────────────────────────────
+   FORM INPUTS
+───────────────────────────────────────────────────────────── */
+
+.field-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.input-base {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.input-base::placeholder {
+  color: var(--color-text-muted);
+}
+
+.input-base:focus {
+  outline: none;
+  border-color: rgba(201, 168, 76, 0.4);
+  box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.08);
+}
+
+.input-base option {
+  background: var(--color-brand-blue);
+  color: white;
+}
 
 @layer utilities {
   .text-balance {

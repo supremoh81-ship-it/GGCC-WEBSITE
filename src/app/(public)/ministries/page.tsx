@@ -78,7 +78,7 @@ export default function MinistriesPage() {
 
                   {/* Join button */}
                   <Link
-                    href="#"
+                    href={`/ministries/join/${ministry.slug}`}
                     className="inline-flex items-center gap-1.5 text-sm font-semibold rounded-full px-5 py-2.5 border transition-all duration-200 self-start hover:opacity-90 active:scale-95"
                     style={{
                       color: ministry.color,
@@ -110,9 +110,14 @@ export default function MinistriesPage() {
                   Reach out to us and we will help you find the right ministry unit based on your gifts,
                   passion, and availability.
                 </p>
-                <Link href="/contact" className="btn-gold">
-                  Get in Touch
-                </Link>
+                <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                  <Link href="/contact" className="btn-gold">
+                    Get in Touch
+                  </Link>
+                  <Link href="/ministries/report" className="btn-outline">
+                    Submit Unit Report
+                  </Link>
+                </div>
               </div>
             </div>
           </FadeInUp>

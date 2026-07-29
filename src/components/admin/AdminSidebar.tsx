@@ -56,6 +56,7 @@ const navSections: { title: string; items: SidebarItem[] }[] = [
       { label: 'Prayers', href: '/admin/prayers', icon: Heart },
       { label: 'Testimonies', href: '/admin/testimonies', icon: Star },
       { label: 'Messages', href: '/admin/messages', icon: MessageSquare },
+      { label: 'Units', href: '/admin/units', icon: Users },
     ],
   },
   {
