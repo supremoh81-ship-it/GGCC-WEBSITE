@@ -1,0 +1,482 @@
+[7/8/2026 9:44 AM] Supreme Horpsy: <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supremoh Orpsy Media Group - Music Promotion, Sync Licensing & Channel Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --sky-blue: #0099ff;
+            --light-blue: #e6f2ff;
+            --white: #ffffff;
+            --purple: #7c3aed;
+            --purple-light: #a78bfa;
+            --dark-bg: #0f172a;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            color: var(--text-dark);
+            background: linear-gradient(135deg, var(--light-blue) 0%, var(--white) 100%);
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.7);
+            border-bottom: 1px solid rgba(0, 153, 255, 0.1);
+            padding: 1rem 2rem;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            transition: color 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        nav a:hover {
+            color: var(--purple);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 2rem;
+            background: linear-gradient(135deg, var(--sky-blue) 0%, var(--purple) 100%);
+            color: var(--white);
+            text-align: center;
+        }
+
+        .hero-content h1 {
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+            font-weight: 900;
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
+        }
+
+        .hero-content p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: var(--white);
+            color: var(--purple);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Sections */
+        section {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        section h2 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        section > p {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin-bottom: 3rem;
+            max-width: 700px;
+        }
+
+        /* Services Grid */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .service-card {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(0, 153, 255, 0.2);
+            padding: 2.5rem;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.9);
+            border-color: var(--purple);
+[7/8/2026 9:44 AM] Supreme Horpsy: }
+
+        .service-card h3 {
+            font-size: 1.5rem;
+            color: var(--sky-blue);
+            margin-bottom: 1rem;
+        }
+
+        .service-card p {
+            color: var(--text-light);
+            line-height: 1.8;
+        }
+
+        /* Testimonials */
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .testimonial-card {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid var(--purple);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(124, 58, 237, 0.1);
+        }
+
+        .testimonial-card h4 {
+            color: var(--purple);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .testimonial-card .role {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .testimonial-card p {
+            color: var(--text-dark);
+            font-style: italic;
+            line-height: 1.8;
+        }
+
+        .video-embed {
+            margin-top: 2rem;
+            border-radius: 10px;
+            overflow: hidden;
+            aspect-ratio: 16 / 9;
+            background: var(--light-blue);
+        }
+
+        .video-embed iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Team Section */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+
+        .team-member {
+            text-align: center;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 15px;
+            border: 1px solid rgba(0, 153, 255, 0.2);
+        }
+
+        .team-member h4 {
+            color: var(--sky-blue);
+            margin: 1.5rem 0 0.5rem;
+            font-size: 1.3rem;
+        }
+
+        .team-member .specialty {
+            color: var(--purple);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .team-member p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        /* Packages */
+        .packages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .package-card {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid var(--sky-blue);
+            padding: 2.5rem;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .package-card:hover {
+            border-color: var(--purple);
+            box-shadow: 0 15px 40px rgba(124, 58, 237, 0.15);
+        }
+
+        .package-card h3 {
+            color: var(--sky-blue);
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+        }
+
+        .package-card .price {
+            font-size: 2rem;
+            color: var(--purple);
+            font-weight: 700;
+            margin: 1.5rem 0;
+        }
+
+        .package-card ul {
+            list-style: none;
+            margin: 2rem 0;
+            text-align: left;
+        }
+
+        .package-card li {
+            padding: 0.7rem 0;
+            color: var(--text-light);
+            border-bottom: 1px solid rgba(0, 153, 255, 0.1);
+        }
+
+        .package-card li:before {
+            content: "✓ ";
+            color: var(--purple);
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+
+        /* Core Values */
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .value-card {
+[7/8/2026 9:44 AM] Supreme Horpsy: backdrop-filter: blur(10px);
+            background: rgba(124, 58, 237, 0.05);
+            border-left: 4px solid var(--purple);
+            padding: 2rem;
+            border-radius: 10px;
+        }
+
+        .value-card h4 {
+            color: var(--purple);
+            margin-bottom: 0.7rem;
+            font-size: 1.2rem;
+        }
+
+        .value-card p {
+            color: var(--text-light);
+            line-height: 1.8;
+        }
+
+        /* Case Studies */
+        .case-study {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(0, 153, 255, 0.2);
+            padding: 2.5rem;
+            border-radius: 15px;
+            margin-bottom: 2.5rem;
+        }
+
+        .case-study h4 {
+            color: var(--sky-blue);
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+
+        .case-study .client {
+            color: var(--purple);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .case-study-image {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            border-radius: 10px;
+            margin: 1.5rem 0;
+        }
+
+        .case-study p {
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        /* Contact Section */
+        .contact-section {
+            background: linear-gradient(135deg, var(--sky-blue) 0%, var(--purple) 100%);
+            color: var(--white);
+            text-align: center;
+            border-radius: 20px;
+            padding: 4rem 2rem;
+            margin: 5rem auto;
+            max-width: 700px;
+        }
+
+        .contact-section h3 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-links {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .contact-link {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .contact-link:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: var(--white);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--text-dark);
+            color: var(--white);
+            text-align: center;
+            padding: 3rem 2rem;
+            border-top: 1px solid rgba(0, 153, 255, 0.2);
+        }
+
+        footer p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav ul {
+                gap: 1rem;
+                font-size: 0.9rem;
+            }
+
+            section {
+                padding: 3rem 1.5rem;
+            }
+
+            .services-grid,
+            .testimonial-grid,
+            .team-grid,
+            .packages-grid,
+            .values-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        section h2 {
+            animation: fadeInUp 0.6s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <ul>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#testimonials">Testimonials</a></li>
+            <li><a href="#team">Team</a></li>
+            <li><a href="#packages">Packages</a></li>
+            <li><a href="#values">Core Values</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+[7/8/2026 9:44 AM] Supreme Horpsy: <h1>Supremoh Orpsy Media Group</h1>
+            <p>Music Promotion, Sync Licensing Readiness & Channel Growth. We build sustainable careers for artists, creators, and brands.</p>
+            <a href="#contact" class="cta-button">Get Started</a>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services">
+        <h2>Our Services</h2>
+        <p>We specialize in three core areas that drive real results for independent artists and content creators.</p>
+        <div class="services-grid">
+            <div class="service-card">
+                <h3>Sync Licensing Readiness</h3>
+                <p>Prepare your tracks for licensing opportunities. We audit your metadata, stems, PRO registration,
